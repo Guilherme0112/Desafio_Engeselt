@@ -1,0 +1,54 @@
+/* Pages/Confectionery/Confectioneries.vue */
+.container_search{
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color2);
+    padding: 20px;
+    width: 500px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.377);
+}
+.container_confectionery{
+
+    background-color: var(--color2);
+    width: fit-content;
+    padding: 10px 20px;
+    border-radius: 10px;
+
+    margin: 20px;
+}
+.container_confectionery span{
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* Pages/Confectionery/RegisterConfectionery.vue */
+@keyframes fadeIn {
+    0%{
+        opacity: 1;
+     }
+    100%{
+
+        opacity: 0;
+        display: none;
+    }
+}
+@keyframes fadeOut {
+    0%{
+        opacity: 0;
+    }
+    100%{
+
+        opacity: 1;
+        display: block;
+    }
+}
+.fadeOut {
+    animation: fadeOut 0s forwards;
+}
+
+.fadeIn {
+    animation: fadeIn 0s forwards;
+}

@@ -12,9 +12,13 @@ export default {
     Header
   }
 };
+
+document.title = "Início"
+
 </script>
 <template>
     
+
     <Header :auth="auth"/>
     <slot />
 
@@ -53,7 +57,16 @@ export default {
         </section>
         <!-- Fim do container 2 -->
 
+        <!-- Container 3 -->
+        <section class="container container_3">
 
+          <h1>Encontre confeitarias perto de você</h1>
+
+          <div>
+            
+          </div>
+        </section>
+        <!-- Fim do container 3 -->
 
     </div>
 </template>

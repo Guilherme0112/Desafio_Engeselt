@@ -1,8 +1,7 @@
 @import url("./globals.css");
 
+/* Botões */
 .primary_button{
-    
-
     padding: 10px 20px;
     border-radius: 10px;
     border: 0;
@@ -12,6 +11,24 @@
     font-size: 18px;
     font-weight: 600;
     white-space: nowrap;
+    text-decoration: none;
+}
+.secundary_button{
+    background-color: transparent;
+    border: 0;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.danger_button{
 
-
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 0;
+    cursor: pointer;
+    background-color: var(--color5);
+    color: var(--color1);
+    font-size: 18px;
+    font-weight: 600;
+    white-space: nowrap;
 }

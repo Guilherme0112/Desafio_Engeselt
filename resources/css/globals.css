@@ -12,6 +12,7 @@
     --color2: #f7bc99;
     --color3: #97999c;
     --color4: #8d4c3c;
+    --color5: #3a3a3a;
 }
 #app{
     width: 100%;
@@ -28,10 +29,14 @@ body{
     background-image: url('../assets/bolo3.png');
     background-attachment: fixed;
     background-position: center;
+    background-size: cover;
+}
+
+h1{
+    font-size: 40px;
 }
 
 /* Header */
-
 header{
 
     position: fixed;
@@ -65,4 +70,23 @@ nav ul li a {
     text-decoration: none;
     font-weight: 600;
     font-size: 18px;
+}
+
+/* PopUp de confirmação */
+dialog{
+    border: none;
+    border-radius: 10px;
+    background-color: var(--color2);
+    color: var(--color4);
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.377);
+    padding: 20px;
+    max-width: 600px;
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+dialog button{
+    margin: 10px;
 }

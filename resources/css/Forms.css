@@ -1,6 +1,4 @@
-@import url("./globals.css");
-
-
+/* Estilo 1 para o formulário */
 form{
 
     background-color: var(--color2);
@@ -42,8 +40,19 @@ input{
     width: 100%;
     font-size: 18px;
 }
-
 .msg_error{
     color: red;
     font-weight: 600;
+}
+
+/* Estilo 2 para formulário */
+
+.form2{
+
+    position: relative;
+    max-width: 500px;
+    height: auto;
+    background-color: var(--color2);
+    border-radius: 10px;
+    margin: 10px;
 }

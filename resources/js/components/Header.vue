@@ -22,6 +22,9 @@ export default {
                 <li>
                     <Link href="/">Início</Link>
                 </li>
+                <li>
+                    <Link href="/confectionerys">Marketplace</Link>
+                </li>
 
                 <template v-if="!auth.user">
                     <li>
@@ -35,6 +38,9 @@ export default {
                 <template v-else>
                     <li>
                         <Link href="/dashboard">Dashboard</Link>
+                    </li>
+                    <li>
+                        <Link href="/profile">Perfil</Link>
                     </li>
                     <li>
                         <Link href="/logout" method="post" as="button" style="background-color: transparent; border: 0; font-size: 18px; font-weight: 600; cursor: pointer;">Sair</Link>
