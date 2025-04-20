@@ -1,0 +1,17 @@
+@import url("./globals.css");
+
+.primary_button{
+    
+
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 0;
+    cursor: pointer;
+    background-color: var(--color4);
+    color: var(--color1);
+    font-size: 18px;
+    font-weight: 600;
+    white-space: nowrap;
+
+
+}

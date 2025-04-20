@@ -1,0 +1,40 @@
+@import url("globals.css");
+
+/* Configurações gerais dos containers da Home */
+.container{
+
+    width: 100%;
+    padding: 10px;
+    background-color: var(--color2);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    color: var(--color4);
+
+    border-top-left-radius: 100px;
+    border-bottom-right-radius: 100px;
+    margin: 30px 0;
+}
+.container div {
+    max-width: 400px;
+    margin: 0 90px;
+}
+.container h1{
+    font-size: 40px;
+}
+.container p{
+    font-size: 20px;
+}
+.img_container{
+
+    width: 300px;
+    border-top-left-radius: 100px;
+    border-bottom-right-radius: 100px;
+}
+
+/* Container 2 terá somente a cor do background de diferente */
+.container_2{
+    background-color: transparent;
+}
