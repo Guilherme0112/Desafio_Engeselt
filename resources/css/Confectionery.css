@@ -1,54 +1,115 @@
 /* Pages/Confectionery/Confectioneries.vue */
-.container_search{
-    position: fixed;
-    top: 100px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: var(--color2);
-    padding: 20px;
-    width: 500px;
-    border-radius: 10px;
-    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.377);
+.container_search {
+  position: fixed;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--color2);
+  padding: 20px;
+  width: 500px;
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.377);
 }
-.container_confectionery{
+.container_show_confectioneries{
 
-    background-color: var(--color2);
-    width: fit-content;
-    padding: 10px 20px;
-    border-radius: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
 
-    margin: 20px;
+
+/* Template de exibição das confeitarias */
+.container_confectionery {
+  background-color: #f7bc99;
+  color: #8d4c3c;
+  margin: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  position: relative;
+  width: fit-content;
+  max-width: 500px;
+
+  padding: 20px 35px 15px 15px;
+  transition: .4s;
+  text-decoration: none;
 }
-.container_confectionery span{
-    font-size: 22px;
-    font-weight: 600;
+.container_confectionery:hover{
+  transform: scale(1.01);
 }
+.link_container{
+  text-decoration: none;
+}
+.container_confectionery h2 {
+  /* Evitar que o nome da empresa fique muito grande na exibição */
+    white-space: nowrap;        
+    overflow: hidden;           
+    text-overflow: ellipsis;  
+    
+}
+.container_confectionery div p {
+  margin: 5px 0;
+  
+}
+.menu-wrapper {
+  position: absolute;
+  top: 20px;
+  right: 5px;
+}
+.menu-button {
+  padding: 4px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  color: #8d4c3c;
+  transition: .3s;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+.menu-button:hover, .menu-button:focus{
+  background-color: rgba(0, 0, 0, 0.2);
+}
+.dropdown {
+  position: absolute;
+  top: 30px;
+  right: 0;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  display: grid;
+  z-index: 10;
+}
+
+.dropdown-content {
+  display: grid;
+}
+
+.dropdown-content a,
+.dropdown-content button {
+  padding: 8px 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  text-decoration: none;
+  background-color: white;
+}
+
+.dropdown-content a:hover,
+.dropdown-content button:hover {
+  background-color: #f8f1ed;
+}
+
 
 /* Pages/Confectionery/RegisterConfectionery.vue */
-@keyframes fadeIn {
-    0%{
-        opacity: 1;
-     }
-    100%{
-
-        opacity: 0;
-        display: none;
-    }
-}
-@keyframes fadeOut {
-    0%{
-        opacity: 0;
-    }
-    100%{
-
-        opacity: 1;
-        display: block;
-    }
-}
 .fadeOut {
-    animation: fadeOut 0s forwards;
+  display: block;
 }
-
+.flex{
+  display: flex
+}
 .fadeIn {
-    animation: fadeIn 0s forwards;
+  display: none;
 }

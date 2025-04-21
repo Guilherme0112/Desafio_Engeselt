@@ -23,7 +23,7 @@ export default {
                     <Link href="/">Início</Link>
                 </li>
                 <li>
-                    <Link href="/confectionerys">Marketplace</Link>
+                    <Link href="/confectioneries">Marketplace</Link>
                 </li>
 
                 <template v-if="!auth.user">

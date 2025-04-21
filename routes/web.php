@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Confectionery\ConfectioneryController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -15,17 +16,31 @@ Route::get('/', function () {
     ]);
 });
 
+// Página de marketplace não precisa de login
+// Exibir confeiterias
+Route::get("/confectioneries", [ConfectioneryController::class, 'index'])->name("confectionery.index");
+
+// Rotas do marketplace que precisam de login
 Route::middleware("auth")->group(function() {
-    Route::get("/confectioneries", [ConfectioneryController::class, 'index'])->name("confectionery.index");
-    Route::get("/confectionery/create", [ConfectioneryController::class, 'create'])->name("confectionery.create");
+
+    // Registrar confeitaria
+    Route::get("/confectionery/create", function(){ 
+        return Inertia::render("Confectionery/RegisterConfectionery"); 
+    })->name("confectionery.create");
     Route::post("/confectionery/create", [ConfectioneryController::class, "store"])->name("confectionery.store");
+
+    // Editar Confeitaria
+    Route::get("/confectionery/update/{id}", [ConfectioneryController::class, 'edit'])->name("confectionery.edit");
+    Route::patch("/confectionery/update/{id}", [ConfectioneryController::class, 'update'])->name("confectionery.update");
+
+    // Deletar Confeitaria
+    Route::delete("/confectionery/delete/{id}", [ConfectioneryController::class, 'destroy'])->name("confectionery.destroy");
 });
 
+// Dashboard do sistema
+Route::get('/dashboard', [DashboardController::class, "index"])->middleware(['auth', 'verified'])->name('dashboard.index');
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+// Rotas relacionadas ao usuário
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

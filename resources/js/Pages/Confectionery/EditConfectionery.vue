@@ -1,4 +1,5 @@
 <script setup>
+
 import { useForm } from '@inertiajs/vue3';
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import InputError from '@/Components/InputError.vue';
@@ -7,44 +8,41 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Header from '@/Components/Header.vue';
 import { ref, onMounted, watch } from 'vue';
-import {  useCepAddress } from '@/Scripts/autoCompleteAddress';
-import { registerConfectionery } from '@/Scripts/Confectionery/registerConfectionery';
+import { useCepAddress } from '@/Scripts/autoCompleteAddress';
+import { editConfectionery } from '@/Scripts/Confectionery/editConfectionery';
 import "../../../css/Forms.css";
 import "../../../css/Confectionery.css";
 
-
-// Cria a referência e o evento de trocar de parte
+// cria a referência
+// Ao clicar nos botões ele altera a parte do formulario (Endereço e Dados gerais)
 const part2Form = ref(false);
 function toggleParts() {
     part2Form.value = !part2Form.value;
 }
 
 
-// Configura o título da aba
-onMounted(() => {
-    document.title = "Registrar Confeitaria";
-});
-
-
 // Props vindas do Inertia
 const props = defineProps({
-    auth: Object
+    auth: Object,
+    confectionery: Object
 });
 
 
-// Dados do formulário
-let form = useForm({
-    confectionery: '',
-    phone: '',
-    latitude: '',
-    longitude: '',
-    cep: '',
-    city: '',
-    state: '',
-    neighborhood: '',
-    road: '',
-    number: ''
+// Dados do formulário inicializada
+const form = useForm({
+    id: props.confectionery.id || '',
+    confectionery: props.confectionery.confectionery || '',
+    phone: props.confectionery.phone || '',
+    latitude: props.confectionery.latitude || '',
+    longitude: props.confectionery.longitude || '',
+    cep: props.confectionery.cep || '',
+    city: props.confectionery.city || '',
+    state: props.confectionery.state || '',
+    neighborhood: props.confectionery.neighborhood || '',
+    road: props.confectionery.road || '',
+    number: props.confectionery.number || ''
 });
+
 
 // Usando a função para habilitar e desabilitar os campos
 const {
@@ -60,32 +58,32 @@ watch(() => form.cep, async (newCep) => {
     await fetchAddressFromCep(newCep);
 });
 
-// Evento que salvo registro
-const register = () => {
 
-    const res = registerConfectionery(form);
+// Configura o título da aba
+onMounted(() => {
+    document.title = "Registrar Confeitaria";
+});
 
-    // Se retornar false, é pq deu errado e aí ele retorna para a primeira
-    // parte do formulário
-    res === false ? part2Form.value = false : null;
-
+// Envia formulário (Caso tenha sucesso, o backend faz o redirect)
+const edit = () => {
+    editConfectionery(form);
 }
-
 
 </script>
 
 
 <template>
+
     <!-- Header -->
     <Header :auth="auth" />
 
     <AuthenticatedLayout>
 
         <!-- Formulário -->
-        <form @submit.prevent="register">
+        <form @submit.prevent="edit">
             <div>
 
-                <h1>Criar Confeitaria</h1>
+                <h1>Editar Confeitaria</h1>
 
                 <!-- Primeira div -->
                 <div class="part_1" :class="{ 'fadeIn': part2Form, 'fadeOut': !part2Form }">
@@ -146,8 +144,7 @@ const register = () => {
                     <!-- Estado -->
                     <div>
                         <InputLabel for="state" value="Estado:" />
-                        <TextInput :disabled="fieldState" id="state" type="text" v-model="form.state" required
-                            autocomplete="state" />
+                        <TextInput :disabled="fieldState" id="state" type="text" v-model="form.state" required autocomplete="state" />
                         <InputError :message="form.errors.state" />
                     </div>
                     <!-- Fim - Estado -->
@@ -172,8 +169,7 @@ const register = () => {
                     <!-- Rua -->
                     <div>
                         <InputLabel for="road" value="Rua:" />
-                        <TextInput :disabled="fieldRoad" id="road" type="text" v-model="form.road" required
-                            autocomplete="road" />
+                        <TextInput :disabled="fieldRoad" id="road" type="text" v-model="form.road" required autocomplete="road" />
                         <InputError :message="form.errors.road" />
                     </div>
                     <!-- Fim - Rua -->
@@ -196,7 +192,7 @@ const register = () => {
                         <button type="button" class="secundary_button" @click="toggleParts">Voltar</button>
                     </div>
 
-                    <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    <PrimaryButton :disabled="form.processing">
                         Criar Confeitaria
                     </PrimaryButton>
                 </div>

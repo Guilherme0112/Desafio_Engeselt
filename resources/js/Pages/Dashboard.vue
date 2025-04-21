@@ -5,7 +5,8 @@ import { Link } from '@inertiajs/vue3';
 import "../../css/Dashboard.css";
 
 defineProps({
-    auth: Object
+    auth: Object,
+    amountConfectioneries: Number
 })
 
 document.title = "Dashboard";
@@ -29,7 +30,7 @@ document.title = "Dashboard";
 
                 <h1>Confeitarias</h1>
                 <strong><span>Total de confeitarias:</span></strong>
-                <p>0</p>
+                <p>{{ amountConfectioneries }}</p>
             </div>
 
         </section>

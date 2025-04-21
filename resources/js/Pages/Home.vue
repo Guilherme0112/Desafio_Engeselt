@@ -1,17 +1,19 @@
-<script>
+<script setup>
 
-import Header from '../components/Header.vue';
+import Header from '@/Components/Header.vue';
 import '../../css/Home.css'; 
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import { onMounted } from 'vue';
 
-export default {
-  name: 'Home',
-  props: {
-    auth: Object
-  },
-  components: {
-    Header
-  }
-};
+defineProps({
+  auth: Object
+})
+
+onMounted(() => {
+  let map = L.map('map').setView([43.543450, 56.432420], 7);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
+})
 
 document.title = "Início"
 
@@ -68,6 +70,14 @@ document.title = "Início"
         </section>
         <!-- Fim do container 3 -->
 
+        <section>
+          <div id="map" style="height: 400px;"></div>
+        </section>
+
+
+        <footer>
+
+        </footer>
     </div>
 </template>
 
