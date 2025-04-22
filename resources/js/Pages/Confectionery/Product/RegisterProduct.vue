@@ -1,56 +1,44 @@
-<script>
+<script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import Header from '../../components/Header.vue';
-import { Link, useForm } from '@inertiajs/vue3';
-import "../../../css/Forms.css";
+import Header from '@/Components/Header.vue';
+import { useForm } from '@inertiajs/vue3';
+import "../../../../css/Forms.css";
+import { onMounted } from "vue";
 
-export default {
-    name: 'Home',
-    props: {
-        auth: Object
-    },
-    components: {
-        AuthenticatedLayout,
-        Header,
-        InputLabel,
-        InputError,
-        PrimaryButton,
-        TextInput,
-        Link
-    },
+const props = defineProps({
+    auth: Object,
+    nameConfectionery: String
+});
 
-    setup() {
 
-        // Inicializando o form com useForm
-        const form = useForm({
-            confectionery: '',
-            phone: '',
-            latitude: '',
-            longitude: '',
-            cep: '',
-            city: '',
-            state: '',
-            neighborhood: '',
-            road: ''
-        });
+// Inicializando o form com useForm
+const form = useForm({
+    product: '',
+    price: '',
+    description: '',
+    file: '',
 
-        // Função de envio do formulário
-        function submit() {
-            form.post('', {
-                onSuccess: () => {
-                    console.log('Formulário enviado com sucesso!');
-                    console.log(form);
-                },
-            });
-        }
+});
 
-        return { form, submit };
-    }
-};
+
+// Função de envio do formulário
+function submit() {
+    form.post('', {
+        onError: (err) => {
+            console.log(err);
+        },
+    });
+}
+
+
+// Title da página
+onMounted(() => {
+    document.title = props.nameConfectionery;
+})
 </script>
 
 <template>
@@ -64,7 +52,7 @@ export default {
         <!-- Formulário -->
         <form @submit.prevent="submit">
             <div>
-                <h1>Criar Confeitaria</h1>
+                <h1>Criar Produto para    {{ props.nameConfectionery }}</h1>
 
                 <!-- Nome do Produto -->
                 <div>
@@ -77,72 +65,29 @@ export default {
 
                 <!-- TValor -->
                 <div>
-                    <InputLabel for="valor" value="Valor:" />
-                    <TextInput id="valor" type="text" v-model="form.valor" required autofocus autocomplete="valor" />
-                    <InputError :message="form.errors.valor" />
+                    <InputLabel for="price" value="Valor:" />
+                    <TextInput id="price" type="text" v-model="form.price" required autofocus autocomplete="price" />
+                    <InputError :message="form.errors.price" />
                 </div>
                 <!-- Fim - Valor -->
 
                 <!-- Latitudade -->
                 <div>
-                    <InputLabel for="latitude" value="Latitude:" />
-                    <TextInput id="latitude" type="text" v-model="form.latitude" required autocomplete="latitude" />
-                    <InputError :message="form.errors.latitude" />
+                    <InputLabel for="description" value="Descrição:" />
+                    <TextInput id="description" type="text" v-model="form.description" required
+                        autocomplete="description" />
+                    <InputError :message="form.errors.description" />
                 </div>
                 <!-- Fim - Latitude -->
 
                 <!-- Longitude -->
                 <div>
-                    <InputLabel for="longitude" value="Longitude:" />
-                    <TextInput id="longitude" type="text" v-model="form.longitude" required autocomplete="longitude" />
-                    <InputError :message="form.errors.longitude" />
+                    <InputLabel for="file" value="Imagens:" />
+                    <TextInput id="file" type="file" v-model="form.file" required autocomplete="file" />
+                    <InputError :message="form.errors.file" />
                 </div>
                 <!-- Fim - Longitude -->
 
-                <div>
-
-                    <!-- CEP -->
-                    <div>
-                        <InputLabel for="cep" value="CEP:" />
-                        <TextInput id="cep" type="text" v-model="form.cep" required autocomplete="cep" />
-                        <InputError :message="form.errors.cep" />
-                    </div>
-                    <!-- Fim - CEP -->
-
-                    <!-- Estado -->
-                    <div>
-                        <InputLabel for="state" value="Estado:" />
-                        <TextInput id="state" type="text" v-model="form.state" required autocomplete="state" />
-                        <InputError :message="form.errors.state" />
-                    </div>
-                    <!-- Fim - Estado -->
-
-                    <!-- Cidade -->
-                    <div>
-                        <InputLabel for="city" value="Cidade:" />
-                        <TextInput id="city" type="text" v-model="form.city" required autocomplete="city" />
-                        <InputError :message="form.errors.city" />
-                    </div>
-                    <!-- Fim - Cidade -->
-
-                    <!-- Bairro -->
-                    <div>
-                        <InputLabel for="neighborhood" value="Bairro:" />
-                        <TextInput id="neighborhood" type="text" v-model="form.neighborhood" required
-                            autocomplete="neighborhood" />
-                        <InputError :message="form.errors.neighborhood" />
-                    </div>
-                    <!-- Fim - Bairro -->
-
-                    <!-- Rua -->
-                    <div>
-                        <InputLabel for="road" value="Rua:" />
-                        <TextInput id="road" type="text" v-model="form.road" required autocomplete="road" />
-                        <InputError :message="form.errors.road" />
-                    </div>
-                    <!-- Fim - Rua -->
-                     
-                </div>
 
                 <!-- Container do button -->
                 <div style="display: flex; justify-content: space-around;">
@@ -151,7 +96,7 @@ export default {
                     </div>
 
                     <PrimaryButton class="ms-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        Criar Confeitaria
+                        Criar Produto
                     </PrimaryButton>
                 </div>
             </div>

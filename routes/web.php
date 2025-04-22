@@ -1,7 +1,8 @@
 <?php
 
+use App\Http\Controllers\ConfectioneryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Confectionery\ConfectioneryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,6 +37,13 @@ Route::middleware("auth")->group(function() {
 // Exibir confeiterias
 Route::get("/confectioneries", [ConfectioneryController::class, 'index'])->name("confectionery.index");
 Route::get("/confectionery/{id}", [ConfectioneryController::class, 'show'])->name("confectionery.show");
+
+
+// Rotas relacionadas aos produtos
+Route::middleware("auth")->group(function(){
+
+    Route::get("/confectionery/{confectionery}/create", [ProductController::class, "create"])->name("product.create");
+});
 
 
 // Rotas relacionadas ao usuário

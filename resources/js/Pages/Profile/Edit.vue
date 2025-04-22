@@ -47,10 +47,10 @@ document.title = "Meu Perfil";
                     <UpdatePasswordForm />
                 </div>
 
-                <div class="m-88">
+                <div class="m-105">
                     <UpdateProfileInformationForm :must-verify-email="mustVerifyEmail" :status="status" />
                 </div>
-                <div class="container_profile" style="height: 200px;">
+                <div class="container_profile" style="height: fit-content;">
                     <h3>⚠ Aviso Importante</h3>
                     <br>
                     <p>

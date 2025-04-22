@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Confectionery;
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Confectionery;
+use App\Models\Product;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
@@ -46,12 +48,22 @@ class ConfectioneryController extends Controller
      */
     public function show($id)
     {
+        try{
 
-        $confectionery = Confectionery::findOrFail($id);
+            $confectionery = Confectionery::findOrFail($id);
+            $products = Product::where("id_product", $id)->get();
 
-        return Inertia::render("Confectionery/Confectionery", [
-            "confectionery" => $confectionery
-        ]);
+
+            return Inertia::render("Confectionery/Confectionery", [
+                "confectionery" => $confectionery,
+                "products" => $products
+            ]);
+
+        } catch(ModelNotFoundException $e){
+            
+            return redirect('/');
+        }
+    
     }
 
 
@@ -116,7 +128,7 @@ class ConfectioneryController extends Controller
         Confectionery::create($validated);
 
         // Retorna a view , caso tenha dado tudo certo
-        return redirect()->route("dashboard.index")->with("succes", "Confeitaria registrada com sucesso");
+        return redirect()->route("profile.index")->with("succes", "Confeitaria registrada com sucesso");
     }
 
 

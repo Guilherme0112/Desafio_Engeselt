@@ -1,13 +1,15 @@
 <script setup>
 
 import Header from '@/Components/Header.vue';
+import { Link } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 import "../../../css/Confectionery.css";
 
 // Props vindo do inertia
 const props = defineProps({
     auth: Object,
-    confectionery: Object
+    confectionery: Object,
+    products: Object
 })
 
 // Title da página
@@ -43,24 +45,32 @@ onMounted(() => {
         </section>
 
         <section class="products_section">
-            <h2>Produtos</h2>
+            <div style="display: flex; justify-content: space-between">
+                <h2>Produtos</h2>
+                <Link :href="`/confectionery/${props.confectionery.id}/create`" class="primary_button">Criar Produto para esta confeitaria</Link>
+            </div>
 
             <!-- Será exibido quando não há produtos -->
-            <div>
+            <div v-if="props.products.length < 1">
 
+                <h1>Não há produtos registrados</h1>
 
             </div>
 
             <!-- Template para produtos -->
-            <div class="product_card">
+            <div class="product_card" v-else>
+
                 <div class="product_image">
                     <img src="" alt="Nome do Produto">
                 </div>
+
                 <div class="product_info">
+
                     <h2 class="product_name">Nome do Produto</h2>
                     <p class="product_description">Descrição detalhada e irresistível do produto, destacando o sabor e a
                         qualidade.</p>
                     <span class="product_price">R$ 19,90</span>
+
                 </div>
             </div>
         </section>

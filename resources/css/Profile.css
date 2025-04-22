@@ -1,11 +1,10 @@
 .profile-container {
     padding: 40px 20px;
-    max-width: 1300px;
+    width: fit-content;
     margin: 50px auto;
-    font-family: 'Segoe UI', sans-serif;
 }
-.m-88{
-    margin-top: -88px;
+.m-105{
+    margin-top: -105px;
 }
 .card-grid {
     display: flex;
@@ -31,7 +30,7 @@
 }
 
 @media (max-width: 1084px){
-    .m-88{
+    .m-105{
         margin-top: 0;
     }
 }
