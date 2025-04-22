@@ -13,19 +13,46 @@ class ConfectioneryController extends Controller
 {
 
     /** Método que renderiza a página de marketplace
+     * Se não houver parametros ele retorna os dados sem filtro
+     * Com o parametro query, ele retorna as confeitarias que tem o nome parecido
      * 
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Busca os dados
-        $confectioneries = Confectionery::orderBy("created_at", 'desc')->paginate(10);
+        // Verifica se existe um parâmetro de busca
+        $query = $request->input('query');
 
-        // Retorna junto com a view
+        if ($query) {
+            // Caso exista um parâmetro de busca, realiza a busca filtrando pelo nome ou descrição
+            $confectioneries = Confectionery::where('confectionery', 'like', "%{$query}%")
+                ->orderBy('created_at', 'desc')
+                ->paginate(10);
+        } else {
+            // Caso não haja busca, retorna todos os dados com paginação
+            $confectioneries = Confectionery::orderBy("created_at", 'desc')
+                ->paginate(10);
+        }
+
+        // Retorna os dados para o Vue com Inertia
         return Inertia::render('Confectionery/Confectioneries', [
-            'confectioneries' => $confectioneries
+            'confectioneries' => $confectioneries,
+            'query' => $query, // Passa a query para que o campo de busca possa ser preenchido corretamente no frontend
         ]);
     }
 
+
+    /** Método que busca a confeitaria no banco de dados
+     * @param id Id da confeitaria
+     */
+    public function show($id)
+    {
+
+        $confectionery = Confectionery::findOrFail($id);
+
+        return Inertia::render("Confectionery/Confectionery", [
+            "confectionery" => $confectionery
+        ]);
+    }
 
 
     /** Método que valida e salva os dados no banco de dados

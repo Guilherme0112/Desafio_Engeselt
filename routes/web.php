@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Confectionery\ConfectioneryController;
-use App\Http\Controllers\DashboardController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -15,10 +14,6 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-
-// Página de marketplace não precisa de login
-// Exibir confeiterias
-Route::get("/confectioneries", [ConfectioneryController::class, 'index'])->name("confectionery.index");
 
 // Rotas do marketplace que precisam de login
 Route::middleware("auth")->group(function() {
@@ -37,8 +32,11 @@ Route::middleware("auth")->group(function() {
     Route::delete("/confectionery/delete/{id}", [ConfectioneryController::class, 'destroy'])->name("confectionery.destroy");
 });
 
-// Dashboard do sistema
-Route::get('/dashboard', [DashboardController::class, "index"])->middleware(['auth', 'verified'])->name('dashboard.index');
+// Página de marketplace não precisa de login
+// Exibir confeiterias
+Route::get("/confectioneries", [ConfectioneryController::class, 'index'])->name("confectionery.index");
+Route::get("/confectionery/{id}", [ConfectioneryController::class, 'show'])->name("confectionery.show");
+
 
 // Rotas relacionadas ao usuário
 Route::middleware('auth')->group(function () {

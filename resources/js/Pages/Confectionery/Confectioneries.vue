@@ -82,8 +82,12 @@ document.title = "Marketplace";
 
 	<section class="container_show_confectioneries">
 
+		<div v-if="confectioneries.data.length === 0">
+			<h1>Não há confeitarias cadastradas</h1>
+		</div>
+
 		<!-- Template que renderiza as informações da confeitaria -->
-		<div class="container_confectionery" v-for="confectionery in confectioneries.data" :key="confectionery.id">
+		<div class="container_confectionery" v-for="confectionery in confectioneries.data" :key="confectionery.id" v-else>
 
 			<Link :href="`/confectionery/${confectionery.id}`" class="link_container">
 			<!-- Nome da confeitaria -->
@@ -99,7 +103,7 @@ document.title = "Marketplace";
 			</Link>
 
 			<!-- Botão de 3 pontos -->
-			<div class="menu-wrapper">
+			<div class="menu-wrapper" v-if="auth.user">
 
 				<button @click.stop="toggleMenu(confectionery.id)" class="menu-button">⋮</button>
 

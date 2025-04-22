@@ -1,6 +1,7 @@
 <script setup>
 
 import Header from '@/Components/Header.vue';
+import Footer from '@/Components/Footer.vue';
 import '../../css/Home.css'; 
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -74,10 +75,8 @@ document.title = "Início"
           <div id="map" style="height: 400px;"></div>
         </section>
 
+        <Footer />
 
-        <footer>
-
-        </footer>
     </div>
 </template>
 

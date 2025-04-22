@@ -37,9 +37,6 @@ export default {
 
                 <template v-else>
                     <li>
-                        <Link href="/dashboard">Dashboard</Link>
-                    </li>
-                    <li>
                         <Link href="/profile">Perfil</Link>
                     </li>
                     <li>
