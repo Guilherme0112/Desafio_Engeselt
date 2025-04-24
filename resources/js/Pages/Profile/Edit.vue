@@ -33,6 +33,15 @@ document.title = "Meu Perfil";
 
             <div class="card-grid">
 
+
+                <div>
+                    <UpdatePasswordForm />
+                </div>
+
+                <div>
+                    <UpdateProfileInformationForm :must-verify-email="mustVerifyEmail" :status="status" />
+                </div>
+
                 <div class="container_profile">
 
                     <div>
@@ -43,13 +52,7 @@ document.title = "Meu Perfil";
                     <strong><span>Total de confeitarias:</span></strong>
                     <p>{{ amountConfectioneries }}</p>
                 </div>
-                <div>
-                    <UpdatePasswordForm />
-                </div>
 
-                <div class="m-105">
-                    <UpdateProfileInformationForm :must-verify-email="mustVerifyEmail" :status="status" />
-                </div>
                 <div class="container_profile" style="height: fit-content;">
                     <h3>⚠ Aviso Importante</h3>
                     <br>

@@ -1,6 +1,6 @@
 .profile-container {
     padding: 40px 20px;
-    width: fit-content;
+    max-width: 1200px;
     margin: 50px auto;
 }
 .m-105{
@@ -29,7 +29,7 @@
     justify-content: end;
 }
 
-@media (max-width: 1084px){
+@media (max-width: 1900px){
     .m-105{
         margin-top: 0;
     }

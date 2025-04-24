@@ -51,7 +51,7 @@ class ConfectioneryController extends Controller
         try{
 
             $confectionery = Confectionery::findOrFail($id);
-            $products = Product::where("id_product", $id)->get();
+            $products = Product::where("id_confectionery", $id)->get();
 
 
             return Inertia::render("Confectionery/Confectionery", [

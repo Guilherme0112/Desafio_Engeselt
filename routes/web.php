@@ -16,6 +16,12 @@ Route::get('/', function () {
     ]);
 });
 
+
+// Página de marketplace não precisa de login
+// Exibir confeiterias
+Route::get("/confectioneries", [ConfectioneryController::class, 'index'])->name("confectionery.index");
+Route::get("/confectionery/{id}", [ConfectioneryController::class, 'show'])->name("confectionery.show");
+
 // Rotas do marketplace que precisam de login
 Route::middleware("auth")->group(function() {
 
@@ -33,16 +39,18 @@ Route::middleware("auth")->group(function() {
     Route::delete("/confectionery/delete/{id}", [ConfectioneryController::class, 'destroy'])->name("confectionery.destroy");
 });
 
-// Página de marketplace não precisa de login
-// Exibir confeiterias
-Route::get("/confectioneries", [ConfectioneryController::class, 'index'])->name("confectionery.index");
-Route::get("/confectionery/{id}", [ConfectioneryController::class, 'show'])->name("confectionery.show");
 
+// Rotas de produtos que não precisam de login
+// Ver produtos
+Route::get("/confectionery/{confectioneryId}/product/{productId}", [ProductController::class, "show"])->name("product.show");
 
 // Rotas relacionadas aos produtos
 Route::middleware("auth")->group(function(){
 
-    Route::get("/confectionery/{confectionery}/create", [ProductController::class, "create"])->name("product.create");
+    // Criar produto
+    Route::get("/confectionery/{confectioneryId}/product/create", [ProductController::class, "create"])->name("product.create");
+    Route::post("/confectionery/{confectioneryId}/product/create", [ProductController::class, "store"])->name("product.store");
+
 });
 
 

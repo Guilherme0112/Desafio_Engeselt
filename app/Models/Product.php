@@ -8,31 +8,31 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
-        "name",
+        "product",
         "price",
         "description",
         "images",
-        "id_product"
+        "id_confectionery"
     ];
 
     public function store(Request $request)
     {
 
         $validated = $request->validate([
-            "name" => "required|string|max:255",
+            "product" => "required|string|max:255",
             "price" => "required|numeric|min:0",
             "description" => "nullable|string",
-            "images" => "required|array",
+            "images" => "required|array|max:2",
             "images.*" => "image|mimes:jpeg,png,jpg,gif,webp|max:2048",
-            "id_product" => "required|integer|exists:products,id"
+            "id_confectionery" => "required|integer|exists:confectionery,id"
         ]);
 
         Product::create([
-            "name" => $validated["name"],
+            "product" => $validated["name"],
             "price" => $validated["price"],
             "description" => $validated["description"],
             "images" => $validated["images"],
-            "id_product" => $validated["id_product"]
+            "id_confectionery" => $validated["id_confectionery"]
         ]);
     }
 }

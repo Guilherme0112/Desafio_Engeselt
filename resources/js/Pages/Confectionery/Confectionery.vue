@@ -3,7 +3,9 @@
 import Header from '@/Components/Header.vue';
 import { Link } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
+import { currency } from '@/Scripts/formatFields';
 import "../../../css/Confectionery.css";
+import "../../../css/Product.css";
 
 // Props vindo do inertia
 const props = defineProps({
@@ -16,6 +18,7 @@ const props = defineProps({
 onMounted(() => {
     document.title = props.confectionery.confectionery;
 })
+
 
 
 </script>
@@ -45,9 +48,10 @@ onMounted(() => {
         </section>
 
         <section class="products_section">
-            <div style="display: flex; justify-content: space-between">
+            <div style="margin: 40px 0; display: flex; justify-content: space-between; flex-wrap: wrap;">
                 <h2>Produtos</h2>
-                <Link :href="`/confectionery/${props.confectionery.id}/create`" class="primary_button">Criar Produto para esta confeitaria</Link>
+                <Link :href="`/confectionery/${props.confectionery.id}/product/create`" class="primary_button">Criar
+                Produto para esta confeitaria</Link>
             </div>
 
             <!-- Será exibido quando não há produtos -->
@@ -57,20 +61,23 @@ onMounted(() => {
 
             </div>
 
-            <!-- Template para produtos -->
-            <div class="product_card" v-else>
+            <div v-else class="container_show_products">
+                <!-- Template para produtos -->
+                <div class="product_card" v-for="product in products" :key="product.id">
+                    <Link :href="`/confectionery/${product.id_confectionery}/product/${product.id}`">
+                        <div class="product_image">
+                            <img v-if="product.images && product.images.length > 0"
+                                :src="`/storage/${JSON.parse(product.images)[0]}`" :alt="product.product">
+                        </div>
 
-                <div class="product_image">
-                    <img src="" alt="Nome do Produto">
-                </div>
+                        <div class="product_info">
 
-                <div class="product_info">
+                            <h2 class="product_name">{{ product.product }}</h2>
+                            <p class="product_description">{{ product.description }}</p>
+                            <span class="product_price">R$ <span style="font-size: 30px;">{{ currency(product.price) }}</span></span>
 
-                    <h2 class="product_name">Nome do Produto</h2>
-                    <p class="product_description">Descrição detalhada e irresistível do produto, destacando o sabor e a
-                        qualidade.</p>
-                    <span class="product_price">R$ 19,90</span>
-
+                        </div>
+                    </Link>
                 </div>
             </div>
         </section>

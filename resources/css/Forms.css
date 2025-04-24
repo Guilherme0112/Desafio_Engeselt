@@ -40,6 +40,9 @@ input{
     width: 100%;
     font-size: 18px;
 }
+input[type = "file"]{
+    padding: 5px;
+}
 .msg_error{
     color: red;
     font-weight: 600;
