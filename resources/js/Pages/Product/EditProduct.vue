@@ -12,68 +12,83 @@ import "../../../css/Product.css";
 
 const props = defineProps({
     auth: Object,
-    confectionery: Object
+    product: Object
 });
 
+// Função que transforma URL de imagem em File
+async function fetchImageAsFile(url, filename) {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new File([blob], filename, { type: blob.type });
+}
 
-// Inicializando o form com useForm
+// Title da página
+onMounted(() => {
+    document.title = props.product.product;
+});
+
+// Formulário
 const form = useForm({
-    product: '',
-    price: '',
-    description: '',
-    images: [],
+    product: props.product.product || '',
+    price: props.product.price || '',
+    description: props.product.description || '',
+    images: []
 });
 
+const previews = ref([]);
+const files = ref([]);
 
+// Carrega imagens já existentes como arquivos
+onMounted(async () => {
+    try {
+        const parsed = JSON.parse(props.product.images || '[]');
 
-// Função de envio do formulário
+        for (let img of parsed) {
+            const file = await fetchImageAsFile(`/storage/${img}`, img);
+            files.value.push(file);
+            previews.value.push(URL.createObjectURL(file));
+        }
+    } catch (e) {
+        console.error("Erro ao carregar imagens existentes:", e);
+    }
+});
+
+// Envia o form com todas as imagens como File
 function submit() {
+    form.images = files.value;
 
-    form.images = files.value; // passa os arquivos pro campo images
-
-    form.post(route('product.store', props.confectionery.id), {
+    form.post(route('product.update', props.product.id), {
         forceFormData: true,
         onError: (err) => {
-            console.log(err)
+            console.log(err);
         },
     });
 }
 
-
-// Title da página
-onMounted(() => {
-    document.title = props.confectionery.name;
-})
-
-
-const previews = ref([])
-const files = ref([])
-
 function handleFiles(event) {
-    const selectedFiles = Array.from(event.target.files)
+    const selectedFiles = Array.from(event.target.files);
 
-    // Verifica se ao adicionar os novos arquivos vai passar de 2
     if (previews.value.length + selectedFiles.length > 2) {
-        alert("Você só pode adicionar no máximo 2 imagens.")
-        return
+        alert("Você só pode adicionar no máximo 2 imagens.");
+        return;
     }
 
     selectedFiles.forEach(file => {
-        const reader = new FileReader()
+        const reader = new FileReader();
         reader.onload = e => {
-            previews.value.push(e.target.result)
-            files.value.push(file)
-        }
-        reader.readAsDataURL(file)
-    })
+            previews.value.push(e.target.result);
+            files.value.push(file);
+        };
+        reader.readAsDataURL(file);
+    });
 }
 
 function removeImage(index) {
-    previews.value.splice(index, 1)
-    files.value.splice(index, 1)
+    previews.value.splice(index, 1);
+    files.value.splice(index, 1);
 }
-
 </script>
+
 
 <template>
 
@@ -86,7 +101,7 @@ function removeImage(index) {
         <!-- Formulário -->
         <form @submit.prevent="submit">
             <div>
-                <h1>Criar Produto para {{ props.nameConfectionery }}</h1>
+                <h1>Editar produto</h1>
 
 
                 <!-- Nome do Produto -->
@@ -121,7 +136,7 @@ function removeImage(index) {
                         <InputLabel for="description" value="Imagens:" />
 
                         <input type="file" multiple @change="handleFiles" accept="image/*"
-                            :disabled="previews.length >= 2" />
+                            :disabled="previews?.length >= 2" />
 
                         <InputError :message="form.errors.images" />
                         <span>*É possível enviar até 2 imagens</span>
@@ -138,9 +153,10 @@ function removeImage(index) {
                     </div>
 
                     <PrimaryButton :disabled="form.processing">
-                        Criar Produto
+                        Editar Produto
                     </PrimaryButton>
                 </div>
+                <!-- Fim do container button -->
 
                 <!-- Preview das imagens -->
                 <div>

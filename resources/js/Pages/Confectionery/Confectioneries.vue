@@ -87,20 +87,9 @@ document.title = "Marketplace";
 		</div>
 
 		<!-- Template que renderiza as informações da confeitaria -->
-		<div class="container_confectionery" v-for="confectionery in confectioneries.data" :key="confectionery.id" v-else>
+		<div class="container_confectionery" v-for="confectionery in confectioneries.data" :key="confectionery.id"
+			v-else>
 
-			<Link :href="`/confectionery/${confectionery.id}`" class="link_container">
-			<!-- Nome da confeitaria -->
-			<h2>{{ confectionery.confectionery }}</h2>
-
-			<!-- Informações básicas -->
-			<div>
-				<p><strong>Telefone:</strong> {{ confectionery.phone }}</p>
-				<p><strong>CEP:</strong> {{ confectionery.cep }}</p>
-				<p><strong>Cidade:</strong> {{ confectionery.city }}</p>
-				<p><strong>Estado:</strong> {{ confectionery.state }}</p>
-			</div>
-			</Link>
 
 			<!-- Botão de 3 pontos -->
 			<div class="menu-wrapper" v-if="auth.user">
@@ -116,6 +105,19 @@ document.title = "Marketplace";
 				</div>
 
 			</div>
+
+			<Link :href="`/confectionery/details/${confectionery.id}`" class="link_container">
+			<!-- Nome da confeitaria -->
+			<h2>{{ confectionery.confectionery }}</h2>
+
+			<!-- Informações básicas -->
+			<div>
+				<p><strong>Telefone:</strong> {{ confectionery.phone }}</p>
+				<p><strong>CEP:</strong> {{ confectionery.cep }}</p>
+				<p><strong>Cidade:</strong> {{ confectionery.city }}</p>
+				<p><strong>Estado:</strong> {{ confectionery.state }}</p>
+			</div>
+			</Link>
 
 		</div>
 

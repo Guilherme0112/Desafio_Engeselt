@@ -1,11 +1,14 @@
 <script setup>
 
 import Header from '@/Components/Header.vue';
-import { Link } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
+import { Link, router } from '@inertiajs/vue3';
+import { onBeforeUnmount, onMounted } from 'vue';
 import { currency } from '@/Scripts/formatFields';
+import { useMenuDropdown } from "@/Scripts/useMenuDropdown";
 import "../../../css/Confectionery.css";
 import "../../../css/Product.css";
+
+const { activeMenu, toggleMenu, setMenuRef, handleClickOutside } = useMenuDropdown();
 
 // Props vindo do inertia
 const props = defineProps({
@@ -14,12 +17,27 @@ const props = defineProps({
     products: Object
 })
 
-// Title da página
+function deleteItem(id) {
+
+    if (confirm("Tem certeza que deseja deletar esta confeitaria?")) {
+
+        router.delete(route('product.destroy', id), {
+
+            onError: (err) => {
+                console.error("Erro ao deletar a confeitaria: " + err);
+            }
+        });
+    }
+}
+
 onMounted(() => {
     document.title = props.confectionery.confectionery;
-})
+    document.addEventListener('click', handleClickOutside)
+});
 
-
+onBeforeUnmount(() => {
+    document.removeEventListener('click', handleClickOutside)
+});
 
 </script>
 
@@ -62,21 +80,45 @@ onMounted(() => {
             </div>
 
             <div v-else class="container_show_products">
+
                 <!-- Template para produtos -->
                 <div class="product_card" v-for="product in products" :key="product.id">
-                    <Link :href="`/confectionery/${product.id_confectionery}/product/${product.id}`">
-                        <div class="product_image">
-                            <img v-if="product.images && product.images.length > 0"
-                                :src="`/storage/${JSON.parse(product.images)[0]}`" :alt="product.product">
+
+                    <div class="menu-wrapper" v-if="auth.user">
+
+                        <button @click.stop="toggleMenu(product.id)" class="menu-button">⋮</button>
+
+                        <!-- Correção no ref: -->
+                        <div class="dropdown" v-show="activeMenu === product.id" :ref="setMenuRef(product.id)">
+
+                            <div class="dropdown-content" style="display: grid;">
+
+                                <Link :href="`/confectionery/product/update/${product.id}`">Editar</Link>
+                                <button @click="deleteItem(product.id)">Deletar</button>
+
+                            </div>
                         </div>
 
-                        <div class="product_info">
+                    </div>
 
-                            <h2 class="product_name">{{ product.product }}</h2>
-                            <p class="product_description">{{ product.description }}</p>
-                            <span class="product_price">R$ <span style="font-size: 30px;">{{ currency(product.price) }}</span></span>
+                    <Link :href="`/confectionery/${product.id_confectionery}/product/details/${product.id}`">
 
-                        </div>
+
+                    <div class="product_image">
+                        <img v-if="product.images && product.images.length > 0"
+                            :src="`/storage/${JSON.parse(product.images)[0]}`" :alt="product.product">
+                    </div>
+
+
+                    <div class="product_info">
+
+                        <h2 class="product_name">{{ product.product }}</h2>
+                        <p class="product_description">{{ product.description }}</p>
+                        <span class="product_price">R$ <span style="font-size: 30px;">
+                                {{ currency(product.price) }}
+                            </span></span>
+
+                    </div>
                     </Link>
                 </div>
             </div>

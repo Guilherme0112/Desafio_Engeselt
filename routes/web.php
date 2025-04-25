@@ -20,7 +20,7 @@ Route::get('/', function () {
 // Página de marketplace não precisa de login
 // Exibir confeiterias
 Route::get("/confectioneries", [ConfectioneryController::class, 'index'])->name("confectionery.index");
-Route::get("/confectionery/{id}", [ConfectioneryController::class, 'show'])->name("confectionery.show");
+Route::get("/confectionery/details/{id}", [ConfectioneryController::class, 'show'])->name("confectionery.show");
 
 // Rotas do marketplace que precisam de login
 Route::middleware("auth")->group(function() {
@@ -42,7 +42,7 @@ Route::middleware("auth")->group(function() {
 
 // Rotas de produtos que não precisam de login
 // Ver produtos
-Route::get("/confectionery/{confectioneryId}/product/{productId}", [ProductController::class, "show"])->name("product.show");
+Route::get("/confectionery/{confectioneryId}/product/details/{productId}", [ProductController::class, "show"])->name("product.show");
 
 // Rotas relacionadas aos produtos
 Route::middleware("auth")->group(function(){
@@ -50,14 +50,26 @@ Route::middleware("auth")->group(function(){
     // Criar produto
     Route::get("/confectionery/{confectioneryId}/product/create", [ProductController::class, "create"])->name("product.create");
     Route::post("/confectionery/{confectioneryId}/product/create", [ProductController::class, "store"])->name("product.store");
+    
+    // Editar produto
+    Route::get("/confectionery/product/update/{productId}", [ProductController::class, "edit"])->name("product.edit");
+    Route::post("/confectionery/product/update/{productId}", [ProductController::class, "update"])->name("product.update");
+
+
+    // Deletar produto
+    Route::delete("/confectionery/product/delete/{productId}", [ProductController::class, "destroy"])->name("product.destroy");
 
 });
 
 
 // Rotas relacionadas ao usuário
 Route::middleware('auth')->group(function () {
+
+    // Editar perfil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    // Deletar perfil
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 

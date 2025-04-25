@@ -82,7 +82,7 @@ function setMainImage() {
                     Entrar em Contato via WhatsApp
                 </a>
 
-                <p style="margin-left: 20px;">Visite a loja <Link class="store-link" :href="`/confectionery/${props.confectionery.id}`">
+                <p style="margin-left: 20px;">Visite a loja <Link class="store-link" :href="`/confectionery/details/${props.confectionery.id}`">
                         {{ props.confectionery.confectionery }}</Link></p>
             </div>
             <div class="store-info">

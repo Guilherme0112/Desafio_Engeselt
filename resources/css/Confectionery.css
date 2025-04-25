@@ -30,7 +30,7 @@
   width: fit-content;
   max-width: 500px;
 
-  padding: 20px 35px 15px 15px;
+  padding: 10px 10px 15px 15px;
   transition: .4s;
   text-decoration: none;
 }
@@ -49,12 +49,11 @@
 }
 .container_confectionery div p {
   margin: 5px 0;
-  
 }
 .menu-wrapper {
-  position: absolute;
-  top: 20px;
-  right: 5px;
+  position: relative;
+  display: flex;
+  justify-content: end;
 }
 .menu-button {
   padding: 4px;
@@ -68,22 +67,28 @@
   border-radius: 50%;
   width: 30px;
   height: 30px;
+  background-color: var(--color2);
+  margin-right: -2.5px;
+
 }
 .menu-button:hover, .menu-button:focus{
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: var(--color3);
 }
 .dropdown {
-  position: absolute;
-  top: 30px;
-  right: 0;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+
   display: grid;
   z-index: 10;
+  width: 70px;
+  position: absolute;
 }
 
 .dropdown-content {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   display: grid;
+  margin-left: 60px;
+  margin-top: 30px;
+  border-radius: 10px;
+  
 }
 
 .dropdown-content a,
@@ -95,6 +100,9 @@
   font-size: 15px;
   text-decoration: none;
   background-color: white;
+  display: block;
+  width: 70px;
+
 }
 
 .dropdown-content a:hover,

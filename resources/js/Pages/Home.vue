@@ -2,7 +2,7 @@
 
 import Header from '@/Components/Header.vue';
 import Footer from '@/Components/Footer.vue';
-import '../../css/Home.css'; 
+import '../../css/Home.css';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { onMounted } from 'vue';
@@ -12,71 +12,93 @@ defineProps({
 })
 
 onMounted(() => {
+
   let map = L.map('map').setView([43.543450, 56.432420], 7);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function (position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+
+        // Atualiza o mapa para a localização do usuário
+        map.setView([lat, lng], 15);
+
+        // Adiciona um marcador no local do usuário
+        L.marker([lat, lng]).addTo(map)
+          .bindPopup('Você está aqui!')
+          .openPopup();
+      },
+    )
+  }
 })
 
 document.title = "Início"
 
+
+
+
 </script>
 <template>
-    
-
-    <Header :auth="auth"/>
-    <slot />
-
-    <div style="margin-top: 100px; width: 100%;">
 
 
-      <!-- Container 1 -->
-      <section class="container container_1">  
-          <div>
-            <h1>Sua plataforma para conectar e organizar o mundo da confeitaria!</h1>
-            <p>
-              Aqui, você encontra um ambiente completo e intuitivo pensado para confeiteiros locais que desejam divulgar 
-              seus produtos, cadastrar suas lojas e gerenciar seus negócios de forma prática e eficiente.
-            </p>
-          </div>
+  <Header :auth="auth" />
+  <slot />
 
-          <div>
-            <img src="../../assets/bolo1.webp" class="img_container">
-          </div>
-        </section>
-        <!-- Fim do container 1 -->
-        
-        <!-- Container 2 -->
-        <section class="container container_2">
-          <div>
-            <img src="../../assets/bolo2.png" class="img_container">
-          </div>
+  <div style="margin-top: 100px; width: 100%;">
 
-          <div>
-            <h1>Unindo Confeiteiros, Encantando Clientes</h1>
-            <p>
-              Conectar confeiteiros é muito mais do que trocar receitas — é criar uma rede de colaboração que eleva a qualidade e a criatividade na confeitaria. Quando profissionais 
-              compartilham experiências, técnicas e ideias, o resultado é um produto final mais inovador, personalizado e saboroso. 
-            </p>
-          </div>
-        </section>
-        <!-- Fim do container 2 -->
 
-        <!-- Container 3 -->
-        <section class="container container_3">
+    <!-- Container 1 -->
+    <section class="container container_1">
+      <div>
+        <h1>Sua plataforma para conectar e organizar o mundo da confeitaria!</h1>
+        <p>
+          Aqui, você encontra um ambiente completo e intuitivo pensado para confeiteiros locais que desejam divulgar
+          seus produtos, cadastrar suas lojas e gerenciar seus negócios de forma prática e eficiente.
+        </p>
+      </div>
 
-          <h1>Encontre confeitarias perto de você</h1>
+      <div>
+        <img src="../../assets/bolo1.webp" class="img_container">
+      </div>
+    </section>
+    <!-- Fim do container 1 -->
 
-          <div>
-            
-          </div>
-        </section>
-        <!-- Fim do container 3 -->
+    <!-- Container 2 -->
+    <section class="container container_2">
+      <div>
+        <img src="../../assets/bolo2.png" class="img_container">
+      </div>
 
-        <section>
-          <div id="map" style="height: 400px;"></div>
-        </section>
+      <div>
+        <h1>Unindo Confeiteiros, Encantando Clientes</h1>
+        <p>
+          Conectar confeiteiros é muito mais do que trocar receitas — é criar uma rede de colaboração que eleva a
+          qualidade e a criatividade na confeitaria. Quando profissionais
+          compartilham experiências, técnicas e ideias, o resultado é um produto final mais inovador, personalizado e
+          saboroso.
+        </p>
+      </div>
+    </section>
+    <!-- Fim do container 2 -->
 
-        <Footer />
+    <!-- Container 3 -->
+    <section class="container container_3">
 
-    </div>
+      <h1>Encontre confeitarias perto de você</h1>
+
+      <div>
+
+      </div>
+    </section>
+    <!-- Fim do container 3 -->
+
+    <section style="display: flex; justify-content: center;">
+      <div id="map" style="height: 400px; width: 80%;"></div>
+    </section>
+
+    <Footer />
+
+  </div>
 </template>
-

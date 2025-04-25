@@ -7,7 +7,7 @@
 export function editConfectionery(form) {
     form.patch(route('confectionery.update', form.id), {
         onError: () => {
-            part2Form.value = false;
+            return false;
         },
     });
 }

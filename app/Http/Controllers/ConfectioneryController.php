@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Services\ConfectioneryService;
 use App\Models\Confectionery;
 use App\Models\Product;
+use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 
@@ -18,18 +19,22 @@ class ConfectioneryController extends Controller
      * Se não houver parametros ele retorna os dados sem filtro
      * Com o parametro query, ele retorna as confeitarias que tem o nome parecido
      * 
+     * @param request Parametros recebidos da URL da requisição
      */
     public function index(Request $request)
     {
         // Verifica se existe um parâmetro de busca
         $query = $request->input('query');
 
+        // Caso exista um parâmetro de busca, realiza a busca filtrando pelo nome ou descrição
         if ($query) {
-            // Caso exista um parâmetro de busca, realiza a busca filtrando pelo nome ou descrição
+
             $confectioneries = Confectionery::where('confectionery', 'like', "%{$query}%")
                 ->orderBy('created_at', 'desc')
                 ->paginate(10);
+
         } else {
+
             // Caso não haja busca, retorna todos os dados com paginação
             $confectioneries = Confectionery::orderBy("created_at", 'desc')
                 ->paginate(10);
@@ -44,11 +49,14 @@ class ConfectioneryController extends Controller
 
 
     /** Método que busca a confeitaria no banco de dados
+     * 
      * @param id Id da confeitaria
+     * 
+     * @throws ModelNotFoundException Caso a confeitaria não exista
      */
     public function show($id)
     {
-        try{
+        try {
 
             $confectionery = Confectionery::findOrFail($id);
             $products = Product::where("id_confectionery", $id)->get();
@@ -58,91 +66,58 @@ class ConfectioneryController extends Controller
                 "confectionery" => $confectionery,
                 "products" => $products
             ]);
+        } catch (ModelNotFoundException $e) {
 
-        } catch(ModelNotFoundException $e){
-            
             return redirect('/');
         }
-    
     }
 
 
     /** Método que valida e salva os dados no banco de dados
+     * 
+     * @param request Requisição vinda do frontend
+     * @param confectioneryService Serviço da confeitaria (Principais métodos)
+     * 
+     * @throws ValidationException Erros de validação
+     * @throws Exception Erro genérico
      */
-    public function store(Request $request)
+    public function store(Request $request, ConfectioneryService $confectioneryService)
     {
 
-        // Pega o cep recebido, e faz a requisição
-        $cep = $request->input("cep");
+        try {
 
-        $response = Http::withOptions(['verify' => false])->get("https://viacep.com.br/ws/{$cep}/json/");
+            // Tenta salvar uma nova confeitaria
+            $confectioneryService->save($request, null);
 
-        // Se der erro, ele retorna o erro para a view
-        if ($response->failed() || isset($response->json()['erro'])) {
-            throw ValidationException::withMessages([
-                'cep' => 'O CEP informado é inválido',
-            ]);
+            // Retorna a view , caso tenha dado tudo certo
+            return redirect()->route("confectionery.index")->with("succes", "Confeitaria registrada com sucesso");
+
+        } catch (ValidationException $e) {
+
+            return redirect()
+                ->back()
+                ->withErrors($e->errors())
+                ->withInput();
+
+        } catch (Exception $e) {
+
+            return redirect("/");
         }
-
-        // Se não der erro
-        // Lê a resposta em JSON
-        $data = $response->json();
-
-        // Valores da resposta
-        $logradouro = $data['logradouro'];
-        $bairro = $data['bairro'];
-        $localidade = $data['localidade'];
-        $estado = $data['estado'];
-
-        // Pega os valores do front
-        $road = $request->input("road");
-        $state = $request->input("state");
-        $city = $request->input("city");
-        $neighborhood = $request->input("neighborhood");
-
-
-        // Validações
-        // Ele subscreve a resposta do usuário pela resposta da API para
-        // garantir que os dados não sejam manipulados
-        $logradouro != "" ? $road = $logradouro : "";
-        $bairro != "" ? $neighborhood = $bairro : "";
-        $localidade != "" ? $city = $localidade : "";
-        $estado != "" ? $state = $estado : "";
-
-        // Se passar, ele valida o resto e salva (caso passe na validação)
-        // Configurações de validação
-        $validated = $request->validate([
-            'confectionery' => "required|string|max:50|min:3",
-            'phone' => "required|string|size:11",
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
-            'cep' => "required|string|size:8",
-            'city' => "required|string|min:2|max:80",
-            'state' => "required|string|min:2|max:80",
-            'neighborhood' => "required|string|min:2|max:80",
-            'road' => "required|string|min:2|max:80",
-            'number' => "required|string|min:1|max:5"
-        ]);
-
-        // Salva o registro
-        Confectionery::create($validated);
-
-        // Retorna a view , caso tenha dado tudo certo
-        return redirect()->route("profile.index")->with("succes", "Confeitaria registrada com sucesso");
     }
 
 
 
     /** Método GET que busca os dados da cofeitaria para exibir para o usuário
      * 
-     * @param id Id da confeitaria passada na URL 
-     * @return  // A view de editar caso os dados existam ou, o 
+     * @param confectioneryId Id da confeitaria passada na URL 
+     * 
+     * @return  // A view de editar caso os dados existam ou, a view de criar
      */
-    public function edit($id)
+    public function edit($confectioneryId)
     {
 
         // Busca o valor no banco de dados
-        $confectionery = Confectionery::find($id);
+        $confectionery = Confectionery::find($confectioneryId);
 
         // Se existir ele retorna a view com os dados, se não ele retorna para o dashboard caso não exista
         return $confectionery ? Inertia::render("Confectionery/EditConfectionery", ["confectionery" => $confectionery]) : redirect()->route("confectionery.create");
@@ -151,88 +126,57 @@ class ConfectioneryController extends Controller
 
 
     /** Método que edita os dados e salva no banco de dados
-     * @param id Id do registro da confeitaria
+     * 
+     * @param request Requisição vinda do frontend
+     * @param confectioneryId Id do registro da confeitaria
+     * @param confectioneryService Serviço da confeitaria (Principais métodos)
+     * 
+     * @throws ValidationException Erros de validação
+     * @throws Exception Erro genérico
      */
-    public function update($id, Request $request)
+    public function update($confectioneryId, Request $request, ConfectioneryService $confectioneryService)
     {
-        // Pega o cep recebido, e faz a requisição
-        $cep = $request->input("cep");
-        $response = Http::withOptions(['verify' => false])->get("https://viacep.com.br/ws/{$cep}/json/");
 
-        // Se der erro, ele retorna o erro para a view
-        if ($response->failed() || isset($response->json()['erro'])) {
-            throw ValidationException::withMessages([
-                'cep' => 'O CEP informado é inválido',
-            ]);
+        try {
+
+            // Tenta atualizar os dadosda confeitaria
+            $confectioneryService->save($request, $confectioneryId);
+
+            return redirect()->route("confectionery.index")->with("succes", "Confeitaria atualizada com sucesso");
+
+        } catch (ValidationException $e) {
+            return redirect()
+                ->back()
+                ->withErrors($e->errors())
+                ->withInput();
+        } catch (Exception $e) {
+
+            return redirect("/");
         }
-
-        // Validar os dados passados do frontend
-
-        // Lê a resposta em JSON
-        $data = $response->json();
-
-
-        // Valores da resposta
-        $logradouro = $data['logradouro'];
-        $bairro = $data['bairro'];
-        $localidade = $data['localidade'];
-        $estado = $data['estado'];
-
-        // Pega os valores do front
-        $road = $request->input("road");
-        $state = $request->input("state");
-        $city = $request->input("city");
-        $neighborhood = $request->input("neighborhood");
-
-
-        // Validações
-        // Ele subscreve a resposta do usuário pela resposta da API para
-        // garantir que os dados não sejam manipulados
-        $logradouro != "" ? $road = $logradouro : "";
-        $bairro != "" ? $neighborhood = $bairro : "";
-        $localidade != "" ? $city = $localidade : "";
-        $estado != "" ? $state = $estado : "";
-
-        // Se passar, ele valida o resto e salva (caso passe na validação)
-        // Configurações de validação
-        $validated = $request->validate([
-            'confectionery' => "required|string|max:50|min:3",
-            'phone' => "required|string|size:11",
-            'latitude' => 'required|numeric|between:-90,90',
-            'longitude' => 'required|numeric|between:-180,180',
-            'cep' => "required|string|size:8",
-            'city' => "required|string|min:2|max:80",
-            'state' => "required|string|min:2|max:80",
-            'neighborhood' => "required|string|min:2|max:80",
-            'road' => "required|string|min:2|max:80",
-            'number' => "required|string|min:1|max:5"
-        ]);
-
-        // Substitui os dados de `validated` pelos valores obtidos da API
-        $validated['road'] = $road;
-        $validated['neighborhood'] = $neighborhood;
-        $validated['city'] = $city;
-        $validated['state'] = $state;
-
-        // Atualiza o registro
-        $confectionery = Confectionery::findOrFail($id);
-        $confectionery->update($validated);
-
-        return redirect()->route("confectionery.index")->with("succes", "Confeitaria atualizada com sucesso");
     }
 
 
     /** Método para deletar uma confeitaria
-     * @param id Id da confeitaria que será deletada
+     * 
+     * @param confectioneryId Id da confeitaria que será deletada
+     * @param confectioneryService Serviço da confeitaria (Principais métodos)
+     * 
+     * @throws Exception Erro genérico
      */
-    public function destroy($id)
+    public function destroy($confectioneryId, ConfectioneryService $confectioneryService)
     {
 
-        // deletar também os produtos
+        try {
 
-        $confectionery = Confectionery::findOrFail($id);
-        $confectionery->delete();
+            // Tenta fazer o delete da confeitaria com seus produtos
+            $confectioneryService->delete($confectioneryId);
 
-        return redirect()->route("confectionery.index")->with("succes", "Confeitaria deletada com sucesso");
+            return redirect()->route("confectionery.index")->with("succes", "Confeitaria deletada com sucesso");
+
+        } catch (Exception $e) {
+
+            return redirect("/");
+        }
+
     }
 }

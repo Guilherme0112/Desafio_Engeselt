@@ -15,7 +15,7 @@ import "../../../css/Confectionery.css";
 
 // cria a referência
 // Ao clicar nos botões ele altera a parte do formulario (Endereço e Dados gerais)
-const part2Form = ref(false);
+let part2Form = ref(false);
 function toggleParts() {
     part2Form.value = !part2Form.value;
 }
@@ -66,7 +66,7 @@ onMounted(() => {
 
 // Envia formulário (Caso tenha sucesso, o backend faz o redirect)
 const edit = () => {
-    editConfectionery(form);
+    part2Form = editConfectionery(form);
 }
 
 </script>
@@ -193,7 +193,7 @@ const edit = () => {
                     </div>
 
                     <PrimaryButton :disabled="form.processing">
-                        Criar Confeitaria
+                        Editar Confeitaria
                     </PrimaryButton>
                 </div>
             </div>
