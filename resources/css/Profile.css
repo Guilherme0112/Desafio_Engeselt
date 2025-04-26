@@ -27,6 +27,7 @@
     width: 100%;
     display: flex;
     justify-content: end;
+    flex-wrap: wrap;
 }
 
 @media (max-width: 1900px){

@@ -115,3 +115,5 @@ const maxWidthClass = computed(() => {
         </div>
     </dialog>
 </template>
+<style>
+</style>
