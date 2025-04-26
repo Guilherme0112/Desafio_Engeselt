@@ -86,5 +86,15 @@
   /* Rodapé do site */
   footer{
 
+    width: 100%;
+    background-color: var(--color2);
+    border-radius: 10px 10px 0 0;
     height: 100px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 17px;
+    font-weight: 800;
   }

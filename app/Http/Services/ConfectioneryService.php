@@ -7,6 +7,7 @@ use App\Models\Product;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\ValidationException;
 
 class ConfectioneryService
@@ -83,11 +84,9 @@ class ConfectioneryService
 
             // Senão, salva o registro
             return Confectionery::create($validated);
-            
         } catch (ValidationException $e) {
 
             throw $e;
-
         } catch (Exception $e) {
 
             throw new \Exception("Erro ao criar/atualizar confeitaria: " . $e->getMessage());
@@ -108,16 +107,35 @@ class ConfectioneryService
             // Busca pela confeitaria
             $confectionery = Confectionery::findOrFail($confectioneryId);
 
+            // Pega todos os produtos da confeitaria
+            $products = Product::where('id_confectionery', $confectioneryId)->get();
+
+            // Deleta as imagens associadas aos produtos
+            foreach ($products as $product) {
+
+                // Verifica se há imagens e decodifica o JSON
+                if ($product->images) {
+                    $images = json_decode($product->images, true);
+
+                    // Se houver, deleta todas elas
+                    if (is_array($images)) {
+                        foreach ($images as $image) {
+                            // Deleta cada imagem
+                            Storage::disk('public')->delete($image);
+                        }
+                    }
+                }
+            }
+
             // Deleta todos os produtos da confeitaria
-            // Lembrete: Ajeitar para deletar as fotos também
-            Product::where("id_confectionery", $confectioneryId)->delete();
+            Product::where('id_confectionery', $confectioneryId)->delete();
 
             // Deleta a confeitaria
             $confectionery->delete();
+            
         } catch (ModelNotFoundException $e) {
 
             throw new \Exception("Não foi possível encontrar a confeitaria: " + $e->getMessage());
-            
         } catch (Exception $e) {
 
             throw new \Exception("Não foi possível apagar a confeitaria: " + $e->getMessage());

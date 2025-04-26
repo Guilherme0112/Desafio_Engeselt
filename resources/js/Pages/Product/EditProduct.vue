@@ -7,9 +7,12 @@ import TextInput from '@/Components/TextInput.vue';
 import Header from '@/Components/Header.vue';
 import { useForm } from '@inertiajs/vue3';
 import { onMounted, ref } from "vue";
+import { editProduct } from "@/Scripts/Product/editRegister";
 import "../../../css/Forms.css";
 import "../../../css/Product.css";
+import { handleFile } from "@/Scripts/imagesPreview";
 
+// Props vindo do inertia
 const props = defineProps({
     auth: Object,
     product: Object
@@ -35,54 +38,41 @@ const form = useForm({
     images: []
 });
 
+// Inicializando as variáveis de preview e das imagens 
+// que serão enviadas ao backend
 const previews = ref([]);
 const files = ref([]);
 
 // Carrega imagens já existentes como arquivos
 onMounted(async () => {
     try {
+
+        // Converte as imagens que estavam como string para JSON
         const parsed = JSON.parse(props.product.images || '[]');
 
+        // Todas as imagens do json vão para a preview
         for (let img of parsed) {
             const file = await fetchImageAsFile(`/storage/${img}`, img);
             files.value.push(file);
             previews.value.push(URL.createObjectURL(file));
         }
+
     } catch (e) {
         console.error("Erro ao carregar imagens existentes:", e);
     }
 });
 
 // Envia o form com todas as imagens como File
-function submit() {
-    form.images = files.value;
-
-    form.post(route('product.update', props.product.id), {
-        forceFormData: true,
-        onError: (err) => {
-            console.log(err);
-        },
-    });
+const submit = () => {
+    editProduct(form, files.value, props.product.id)
 }
 
-function handleFiles(event) {
-    const selectedFiles = Array.from(event.target.files);
-
-    if (previews.value.length + selectedFiles.length > 2) {
-        alert("Você só pode adicionar no máximo 2 imagens.");
-        return;
-    }
-
-    selectedFiles.forEach(file => {
-        const reader = new FileReader();
-        reader.onload = e => {
-            previews.value.push(e.target.result);
-            files.value.push(file);
-        };
-        reader.readAsDataURL(file);
-    });
+// Validação e renderização das imagens
+function handlerFilesChange(event) {
+    handleFile(event, previews, files);
 }
 
+// Remove a imagem da preview e da array de imagens que irão para o backend
 function removeImage(index) {
     previews.value.splice(index, 1);
     files.value.splice(index, 1);
@@ -94,15 +84,14 @@ function removeImage(index) {
 
     <!-- Header -->
     <Header :auth="auth" />
-    <slot />
 
     <AuthenticatedLayout>
 
         <!-- Formulário -->
         <form @submit.prevent="submit">
             <div>
-                <h1>Editar produto</h1>
 
+                <h1>Editar produto</h1>
 
                 <!-- Nome do Produto -->
                 <div>
@@ -113,7 +102,7 @@ function removeImage(index) {
                 </div>
                 <!-- Fim - Nome do Produto -->
 
-                <!-- TValor -->
+                <!-- Valor -->
                 <div>
                     <InputLabel for="price" value="Valor:" />
                     <TextInput id="price" type="text" v-model="form.price" required autofocus autocomplete="price" />
@@ -135,7 +124,7 @@ function removeImage(index) {
                     <div>
                         <InputLabel for="description" value="Imagens:" />
 
-                        <input type="file" multiple @change="handleFiles" accept="image/*"
+                        <input type="file" multiple @change="handlerFilesChange" accept="image/*"
                             :disabled="previews?.length >= 2" />
 
                         <InputError :message="form.errors.images" />
@@ -152,6 +141,7 @@ function removeImage(index) {
 
                     </div>
 
+                    <!-- Botão para o submit do editar produto -->
                     <PrimaryButton :disabled="form.processing">
                         Editar Produto
                     </PrimaryButton>

@@ -87,6 +87,7 @@ const edit = () => {
 
                 <!-- Primeira div -->
                 <div class="part_1" :class="{ 'fadeIn': part2Form, 'fadeOut': !part2Form }">
+
                     <!-- Nome da confeitaria -->
                     <div>
                         <InputLabel for="confectionery" value="Nome da Confeitaria:" />
@@ -188,15 +189,22 @@ const edit = () => {
                 <!-- Container do button -->
                 <div :class="{ 'flex': part2Form, 'fadeIn': !part2Form }"
                     style="justify-content: space-around; padding: 0 20px;">
+
+                    <!-- Volta para a primeira parte do formulário-->
                     <div>
                         <button type="button" class="secundary_button" @click="toggleParts">Voltar</button>
                     </div>
 
+                    <!-- Faz a requisição para a atualização da confeitaria -->
                     <PrimaryButton :disabled="form.processing">
                         Editar Confeitaria
                     </PrimaryButton>
                 </div>
+                <!-- Fim do container button -->
             </div>
+
         </form>
+
     </AuthenticatedLayout>
+    
 </template>

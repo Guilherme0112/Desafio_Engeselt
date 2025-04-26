@@ -3,10 +3,11 @@
 import Header from '@/Components/Header.vue';
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { router, Link } from '@inertiajs/vue3'
-import "../../../css/Confectionery.css";
-import "../../../css/Forms.css";
 import { useMenuDropdown } from "@/Scripts/useMenuDropdown";
 import { deleteConfectionery } from '@/Scripts/Confectionery/deleteConfectionery';
+import { phone } from '@/Scripts/formatFields';
+import "../../../css/Confectionery.css";
+import "../../../css/Forms.css";
 
 const { activeMenu, toggleMenu, setMenuRef, handleClickOutside } = useMenuDropdown();
 
@@ -17,54 +18,59 @@ const props = defineProps({
 });
 
 
-// Config para o carregamento das confeitarias
-const page = ref(props.confectioneries.current_page)
-const loading = ref(false)
-const allConfectioneries = ref([...props.confectioneries.data])
+const allConfectioneries = ref([])
+allConfectioneries.value = props.confectioneries.data
+
 
 // Evento que gera a busca de mais dados
 const handleScroll = () => {
 	const bottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 100
-	if (bottom && !loading.value && page.value < props.confectioneries.last_page) {
+	if (bottom && page.value < props.confectioneries.last_page) {
 		fetchMore();
 	}
 }
 
-// Requisição que busca mais dados
+// Config para o carregamento das confeitarias
+const page = ref(1)
+const searchTerm = ref('')
+
 const fetchMore = () => {
-	loading.value = true
-	page.value++
 
-	// Faz a requisição para a rota
-	router.get(route('confectionies.index'), { page: page.value }, {
+	// Sempre reseta a página na primeira busca (útil para digitar algo novo)
+	page.value = 1
 
+	router.get(route('confectionery.index'), {
+		page: page.value,
+		search: searchTerm.value
+	}, {
 		preserveScroll: true,
 		preserveState: true,
 		only: ['confectioneries'],
-
 		onSuccess: (page) => {
-			allConfectioneries.value.push(...page.props.confectioneries.data)
-			loading.value = false
+			// Substitui os dados anteriores pelos novos
+			allConfectioneries.value = page.props.confectioneries.data
 		}
-	});
+	})
 }
-
 // Deleta confeitaria
 function deleteItem(id) {
 	deleteConfectionery(id);
 }
 
-
+// Ouvinte do scroll para chamar mais dados quando o usuário chegar no final da página
+// Acionamento do evento que pode ativar o botão de opções
 onMounted(() => {
 	window.addEventListener('scroll', handleScroll);
 	document.addEventListener('click', handleClickOutside)
 });
 
+// Remove os ouvintes
 onBeforeUnmount(() => {
 	window.removeEventListener('scroll', handleScroll);
 	document.removeEventListener('click', handleClickOutside)
 });
 
+// Título da página
 document.title = "Marketplace";
 
 </script>
@@ -77,18 +83,22 @@ document.title = "Marketplace";
 	<!-- Campo de busca pelo nome da empresa  -->
 	<div class="container_search">
 		<span>Nome da empresa:</span>
-		<input type="search">
+		<input type="search" v-model="searchTerm">
+		<button @click="fetchMore" class="primary_button" style="margin: 20px 0 0 0;">Buscar</button>
 	</div>
+
 
 	<section class="container_show_confectioneries">
 
-		<div v-if="confectioneries.data.length === 0">
+		<!-- Caso não haja produtos -->
+		<div v-if="allConfectioneries.length === 0">
 			<h1>Não há confeitarias cadastradas</h1>
 		</div>
 
+
 		<!-- Template que renderiza as informações da confeitaria -->
-		<div class="container_confectionery" v-for="confectionery in confectioneries.data" :key="confectionery.id"
-			v-else>
+		<div class="container_confectionery" v-for="confectionery in allConfectioneries" :key="confectionery.id" v-else>
+
 
 
 			<!-- Botão de 3 pontos -->
@@ -96,7 +106,6 @@ document.title = "Marketplace";
 
 				<button @click.stop="toggleMenu(confectionery.id)" class="menu-button">⋮</button>
 
-				<!-- Correção no ref: -->
 				<div class="dropdown" v-show="activeMenu === confectionery.id" :ref="setMenuRef(confectionery.id)">
 					<div class="dropdown-content">
 						<Link :href="`/confectionery/update/${confectionery.id}`">Editar</Link>
@@ -105,23 +114,28 @@ document.title = "Marketplace";
 				</div>
 
 			</div>
+			<!-- Fim do botão de 3 opções -->
 
+			<!-- Confeitaria -->
 			<Link :href="`/confectionery/details/${confectionery.id}`" class="link_container">
+
 			<!-- Nome da confeitaria -->
 			<h2>{{ confectionery.confectionery }}</h2>
 
 			<!-- Informações básicas -->
 			<div>
-				<p><strong>Telefone:</strong> {{ confectionery.phone }}</p>
+				<p><strong>Telefone:</strong> {{ phone(confectionery.phone) }}</p>
 				<p><strong>CEP:</strong> {{ confectionery.cep }}</p>
 				<p><strong>Cidade:</strong> {{ confectionery.city }}</p>
 				<p><strong>Estado:</strong> {{ confectionery.state }}</p>
 			</div>
+			<!-- Fim das informações -->
+
 			</Link>
+			<!-- Fim da confeitaria -->
+
 
 		</div>
-
-		<div v-if="loading">Carregando...</div>
 
 	</section>
 </template>

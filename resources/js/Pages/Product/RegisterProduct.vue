@@ -9,6 +9,8 @@ import { useForm } from '@inertiajs/vue3';
 import { onMounted, ref } from "vue";
 import "../../../css/Forms.css";
 import "../../../css/Product.css";
+import { registerProduct } from "@/Scripts/Product/registerProduct";
+import { handleFile } from "@/Scripts/imagesPreview";
 
 const props = defineProps({
     auth: Object,
@@ -24,21 +26,10 @@ const form = useForm({
     images: [],
 });
 
-
-
 // Função de envio do formulário
-function submit() {
-
-    form.images = files.value; // passa os arquivos pro campo images
-
-    form.post(route('product.store', props.confectionery.id), {
-        forceFormData: true,
-        onError: (err) => {
-            console.log(err)
-        },
-    });
+const submit = () => {
+    registerProduct(form, files.value, props.confectionery.id);
 }
-
 
 // Title da página
 onMounted(() => {
@@ -49,25 +40,12 @@ onMounted(() => {
 const previews = ref([])
 const files = ref([])
 
-function handleFiles(event) {
-    const selectedFiles = Array.from(event.target.files)
-
-    // Verifica se ao adicionar os novos arquivos vai passar de 2
-    if (previews.value.length + selectedFiles.length > 2) {
-        alert("Você só pode adicionar no máximo 2 imagens.")
-        return
-    }
-
-    selectedFiles.forEach(file => {
-        const reader = new FileReader()
-        reader.onload = e => {
-            previews.value.push(e.target.result)
-            files.value.push(file)
-        }
-        reader.readAsDataURL(file)
-    })
+// Função para renderizar as imagens na preview
+function handlerFilesChange(event) {
+    handleFile(event, previews, files);
 }
 
+// Remove as imagens da preview
 function removeImage(index) {
     previews.value.splice(index, 1)
     files.value.splice(index, 1)
@@ -86,7 +64,7 @@ function removeImage(index) {
         <!-- Formulário -->
         <form @submit.prevent="submit">
             <div>
-                <h1>Criar Produto para {{ props.nameConfectionery }}</h1>
+                <h1>Criar Produto para {{ props.confectionery.confectionery }}</h1>
 
 
                 <!-- Nome do Produto -->
@@ -120,7 +98,7 @@ function removeImage(index) {
                     <div>
                         <InputLabel for="description" value="Imagens:" />
 
-                        <input type="file" multiple @change="handleFiles" accept="image/*"
+                        <input type="file" multiple @change="handlerFilesChange" accept="image/*"
                             :disabled="previews.length >= 2" />
 
                         <InputError :message="form.errors.images" />

@@ -24,7 +24,7 @@ class ConfectioneryController extends Controller
     public function index(Request $request)
     {
         // Verifica se existe um parâmetro de busca
-        $query = $request->input('query');
+        $query = $request->input('search');
 
         // Caso exista um parâmetro de busca, realiza a busca filtrando pelo nome ou descrição
         if ($query) {

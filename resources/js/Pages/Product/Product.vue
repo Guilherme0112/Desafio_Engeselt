@@ -5,6 +5,7 @@ import { Link } from '@inertiajs/vue3';
 import "../../../css/Product.css";
 import { currency, phone } from "@/Scripts/formatFields";
 
+// Props vindo do inertia
 const props = defineProps({
     auth: Object,
     product: Object,
@@ -53,28 +54,40 @@ function setMainImage() {
 </script>
 
 <template>
+
+    <!-- Header -->
     <Header :auth="auth" />
 
+    <!-- Container principal -->
     <div class="container_pai_product">
 
-        <!-- Imagem principal, agora usa currentImage -->
+        <!-- Imagem principal -->
         <img :src="'/storage/' + currentImage" alt="Produto" class="main-image" />
 
+        <!-- Imagem secundária (imagem pequena) -->
         <div class="image-thumbnails" v-if="existSecundaryImage">
-            <!-- Imagem pequena lateral, agora usa setMainImage ao clicar -->
             <img :src="'/storage/' + secundaryImage" alt="Imagem secundária" class="thumbnail"
                 @click="setMainImage()" />
         </div>
 
+        <!-- Detalhes do produto -->
         <div class="details">
+
+            <!-- Título do produto -->
             <h1 class="product-title">{{ props.product.product }}</h1>
+
+            <!-- Preço do produto formatado -->
             <div class="price">
                 <span class="currency">R$</span>
                 <span class="amount">{{ currency(props.product.price) }}</span>
             </div>
+
+            <!-- Descrição do produto -->
             <div class="description">
                 {{ props.product.description }}
             </div>
+
+            <!-- Container de contato com o vendedor -->
             <div style="display: flex;">
                 <a class="primary_button"
                     :href="`https://wa.me/${props.confectionery.phone}?text=Olá!%20Tenho%20interesse%20em%20um%20dos%20seus%20produtos`"
@@ -85,13 +98,21 @@ function setMainImage() {
                 <p style="margin-left: 20px;">Visite a loja <Link class="store-link" :href="`/confectionery/details/${props.confectionery.id}`">
                         {{ props.confectionery.confectionery }}</Link></p>
             </div>
+            <!-- Fim do container de contato com o vendedor -->
+
+            <!-- Informações da loja -->
             <div class="store-info">
                 <p><strong>Telefone:</strong> {{ phone(props.confectionery.phone) }}</p>
                 <p><strong>CEP:</strong> {{ props.confectionery.cep }}</p>
                 <p><strong>Cidade:</strong> {{ props.confectionery.city }}</p>
                 <p><strong>Estado:</strong> {{ props.confectionery.state }}</p>
             </div>
+            <!-- Fim da informações da loja -->
+
         </div>
+        <!-- Fim do detalhes do produto -->
+
     </div>
+    <!-- Fim do container principal -->
 
 </template>
