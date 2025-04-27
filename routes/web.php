@@ -9,6 +9,7 @@ use Inertia\Inertia;
 
 // Rota home
 Route::get('/', [HomeController::class, "index"])->name("home.index");
+Route::get('/location', [HomeController::class, "show"])->name("home.show");
 
 // Página de marketplace não precisa de login
 // Exibir confeiterias

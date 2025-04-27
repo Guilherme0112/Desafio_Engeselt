@@ -84,7 +84,7 @@ onBeforeUnmount(() => {
             <!-- Título e botão de criar produto -->
             <div style="margin: 40px 0; display: flex; justify-content: space-between; flex-wrap: wrap;">
                 <h2>Produtos</h2>
-                <Link :href="`/confectionery/${props.confectionery.id}/product/create`" class="primary_button">Criar
+                <Link v-if="auth.user" :href="`/confectionery/${props.confectionery.id}/product/create`" class="primary_button">Criar
                 Produto para esta confeitaria</Link>
             </div>
             <!-- Fim do título e botão de criar produto -->
