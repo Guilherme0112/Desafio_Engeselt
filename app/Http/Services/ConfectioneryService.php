@@ -68,7 +68,7 @@ class ConfectioneryService
                 'phone' => "required|string|size:11",
                 'latitude' => 'required|numeric|between:-90,90',
                 'longitude' => 'required|numeric|between:-180,180',
-                'cep' => "required|string|size:8",
+                'cep' => "required|digits:8",
                 'city' => "required|string|min:2|max:80",
                 'state' => "required|string|min:2|max:80",
                 'neighborhood' => "required|string|min:2|max:80",

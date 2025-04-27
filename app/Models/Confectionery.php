@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 
 class Confectionery extends Model
 {
-
+    use HasFactory;
+    
     // Dados que serão inseridos
     protected $fillable = [
         'confectionery',

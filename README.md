@@ -107,6 +107,13 @@ php artisan serve
 
 ---
 
+## Para rodar os testes
+
+Digite no terminal:
+```bash
+php artisan test
+```
+
 ## Atenção: configurações no php.ini
 
 Caso ocorra erros relacionados a extensões, **remova os comentários** (descomente) no seu `php.ini` das seguintes linhas:
@@ -116,6 +123,7 @@ extension=pdo_pgsql
 extension=pgsql
 extension=fileinfo
 extension=zip
+extension=gd
 ```
 
 ---
