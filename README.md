@@ -1,13 +1,14 @@
+# Desafio Engeselt – Marketplace de Confeitarias
 
-# Desafio Engeselt
+Este projeto é um **marketplace** dedicado às confeitarias, com funcionalidades para cadastrar e gerenciar tanto as confeitarias quanto seus produtos. As principais características do sistema incluem:
 
-Este é um projeto de um **marketplace de confeitarias**, onde é possível:
-- Cadastrar confeitarias e seus produtos.
-- Realizar login (apenas usuários autenticados podem criar, editar e excluir confeitarias e produtos).
+- **Cadastro de Confeitarias**: Usuários autenticados podem criar, editar e excluir confeitarias.
+- **Cadastro de Produtos**: Apenas confeitarias previamente cadastradas podem criar seus produtos, com a opção de adicionar até **duas imagens** para cada produto.
+- **Autenticação de Usuários**: Somente usuários autenticados podem realizar ações de cadastro, edição ou exclusão de confeitarias e produtos.
+- **Localização das Confeitarias**: Ao permitir o acesso à localização, o sistema exibe as confeitarias mais próximas usando o **Leaflet**, uma biblioteca de mapeamento.
 
-O projeto foi desenvolvido utilizando **Laravel** (back-end) e **Vue.js** (front-end) com **Inertia.js** para comunicação entre as camadas.
+O projeto foi desenvolvido com **Laravel** no back-end e **Vue.js** no front-end, com a comunicação entre as camadas sendo feita através do **Inertia.js**.
 
----
 
 ## Tecnologias utilizadas (Windows)
 
