@@ -7,6 +7,11 @@
  */
 export function registerProduct(form, photos, confectioneryId){
 
+    // Retira as formatações do preço
+    form.price = form.price.replace(/\./g, "")  
+                           .replace(",", ".")  
+                           .trim()
+
     // Coloca as imagens na array do formulário
     form.images = photos;
 
@@ -17,4 +22,7 @@ export function registerProduct(form, photos, confectioneryId){
             console.log(err)
         },
     });
+
+    // Adiciona a formatação de novo
+    form.price = price(form.price)
 }

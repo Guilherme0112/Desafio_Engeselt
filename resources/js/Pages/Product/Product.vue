@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import Header from '@/Components/Header.vue';
 import { Link } from '@inertiajs/vue3';
 import "../../../css/Product.css";
-import { currency, phone } from "@/Scripts/formatFields";
+import { cep, currency, phone } from "@/Scripts/formatFields";
 
 // Props vindo do inertia
 const props = defineProps({
@@ -103,7 +103,7 @@ function setMainImage() {
             <!-- Informações da loja -->
             <div class="store-info">
                 <p><strong>Telefone:</strong> {{ phone(props.confectionery.phone) }}</p>
-                <p><strong>CEP:</strong> {{ props.confectionery.cep }}</p>
+                <p><strong>CEP:</strong> {{ cep(props.confectionery.cep) }}</p>
                 <p><strong>Cidade:</strong> {{ props.confectionery.city }}</p>
                 <p><strong>Estado:</strong> {{ props.confectionery.state }}</p>
             </div>

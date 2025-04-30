@@ -55,7 +55,5 @@ class Confectionery extends Model
             'number' => $validated["number"],
         ]);
 
-        // Retorna, caso tenha dado tudo certo
-        return redirect()->route("confectionery.index")->with("sucess", "Confeitaria registrada com sucesso");
     }
 }

@@ -11,6 +11,7 @@ import "../../../css/Forms.css";
 import "../../../css/Product.css";
 import { registerProduct } from "@/Scripts/Product/registerProduct";
 import { handleFile } from "@/Scripts/imagesPreview";
+import { price } from "@/Scripts/formatFields";
 
 const props = defineProps({
     auth: Object,
@@ -36,9 +37,13 @@ onMounted(() => {
     document.title = props.confectionery.name;
 })
 
-
 const previews = ref([])
 const files = ref([])
+
+
+const formatPrice = (priceField) => {
+    form.price = price(priceField);
+}
 
 // Função para renderizar as imagens na preview
 function handlerFilesChange(event) {
@@ -57,14 +62,13 @@ function removeImage(index) {
 
     <!-- Header -->
     <Header :auth="auth" />
-    <slot />
 
     <AuthenticatedLayout>
 
         <!-- Formulário -->
         <form @submit.prevent="submit">
             <div>
-                <h1>Criar Produto para {{ props.confectionery.confectionery }}</h1>
+                <h1>Criar Produto</h1>
 
 
                 <!-- Nome do Produto -->
@@ -79,7 +83,10 @@ function removeImage(index) {
                 <!-- TValor -->
                 <div>
                     <InputLabel for="price" value="Valor:" />
-                    <TextInput id="price" type="text" v-model="form.price" required autofocus autocomplete="price" />
+                    <div style="padding: 0;">
+                        <span style="position: absolute; font-size: 18px;">R$</span>
+                        <TextInput style="padding-left: 20px;" id="price" type="text" v-model="form.price" @input="formatPrice(form.price)" required autofocus autocomplete="price" />
+                    </div>
                     <InputError :message="form.errors.price" />
                 </div>
                 <!-- Fim - Valor -->

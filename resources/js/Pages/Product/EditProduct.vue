@@ -6,11 +6,12 @@ import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
 import Header from '@/Components/Header.vue';
 import { useForm } from '@inertiajs/vue3';
-import { onMounted, ref } from "vue";
-import { editProduct } from "@/Scripts/Product/editRegister";
+import { computed, onMounted, ref } from "vue";
+import { editProduct } from "@/Scripts/Product/editProduct";
 import "../../../css/Forms.css";
 import "../../../css/Product.css";
 import { handleFile } from "@/Scripts/imagesPreview";
+import { price } from "@/Scripts/formatFields";
 
 // Props vindo do inertia
 const props = defineProps({
@@ -33,7 +34,7 @@ onMounted(() => {
 // Formulário
 const form = useForm({
     product: props.product.product || '',
-    price: props.product.price || '',
+    price: price(String(props.product.price)) || '',
     description: props.product.description || '',
     images: []
 });
@@ -65,6 +66,11 @@ onMounted(async () => {
 // Envia o form com todas as imagens como File
 const submit = () => {
     editProduct(form, files.value, props.product.id)
+}
+
+// Formata o preço do produto
+const formatPrice = (priceField) => {
+    form.price = price(priceField);
 }
 
 // Validação e renderização das imagens
@@ -105,7 +111,10 @@ function removeImage(index) {
                 <!-- Valor -->
                 <div>
                     <InputLabel for="price" value="Valor:" />
-                    <TextInput id="price" type="text" v-model="form.price" required autofocus autocomplete="price" />
+                    <div style="padding: 0;">
+                        <span style="position: absolute; font-size: 18px;">R$</span>
+                        <TextInput style="padding-left: 20px;" id="price" type="text" v-model="form.price" @input="formatPrice(form.price)" required autofocus autocomplete="price" />
+                    </div>
                     <InputError :message="form.errors.price" />
                 </div>
                 <!-- Fim - Valor -->

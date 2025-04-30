@@ -1,3 +1,4 @@
+import { price } from "../formatFields";
 
 /** Método que faz a requisição para atualizar o produto
  * 
@@ -6,6 +7,11 @@
  * @param {*} productId Id do produto
  */
 export function editProduct(form, photos, productId){
+
+    // Retira as formatações do preço
+    form.price = form.price.replace(/\./g, "")  
+                           .replace(",", ".")  
+                           .trim()
 
     // Coloca as imagens na array do formulário
     form.images = photos;
@@ -17,4 +23,7 @@ export function editProduct(form, photos, productId){
             console.log(err);
         },
     });
+
+    // Adiciona a formatação de novo
+    form.price = price(form.price)
 }

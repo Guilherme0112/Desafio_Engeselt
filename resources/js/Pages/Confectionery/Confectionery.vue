@@ -3,9 +3,9 @@
 import Header from '@/Components/Header.vue';
 import { Link } from '@inertiajs/vue3';
 import { onBeforeUnmount, onMounted } from 'vue';
-import { currency, phone } from '@/Scripts/formatFields';
+import { cep, currency, phone } from '@/Scripts/formatFields';
 import { useMenuDropdown } from "@/Scripts/useMenuDropdown";
-import { deleteProduct } from '@/Scripts/Product/deleteRegister';
+import { deleteProduct } from '@/Scripts/Product/deleteProduct';
 import 'leaflet/dist/leaflet.css';
 import "../../../css/Confectionery.css";
 import "../../../css/Product.css";
@@ -63,7 +63,7 @@ onBeforeUnmount(() => {
         <section class="info_section">
             <div class="info_card"><strong>Nome</strong>{{ props.confectionery.confectionery }}</div>
             <div class="info_card"><strong>Telefone</strong>{{ phone(props.confectionery.phone) }}</div>
-            <div class="info_card"><strong>CEP</strong>{{ props.confectionery.cep }}</div>
+            <div class="info_card"><strong>CEP</strong>{{ cep(props.confectionery.cep) }}</div>
             <div class="info_card"><strong>Cidade</strong>{{ props.confectionery.city }}</div>
             <div class="info_card"><strong>Estado</strong>{{ props.confectionery.state }}</div>
             <div class="info_card"><strong>Bairro</strong>{{ props.confectionery.neighborhood }}</div>

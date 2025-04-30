@@ -28,23 +28,21 @@ class ConfectioneryController extends Controller
 
         // Caso exista um parâmetro de busca, realiza a busca filtrando pelo nome ou descrição
         if ($query) {
+            return Inertia::render('Confectionery/Confectioneries', [
+                'confectioneries' =>  Confectionery::where('confectionery', 'like', "%{$query}%")
+                                                    ->orderBy('created_at', 'desc')
+                                                    ->paginate(10),
+                'query' => $query
+            ]);
 
-            $confectioneries = Confectionery::where('confectionery', 'like', "%{$query}%")
-                ->orderBy('created_at', 'desc')
-                ->paginate(10);
+        } 
 
-        } else {
-
-            // Caso não haja busca, retorna todos os dados com paginação
-            $confectioneries = Confectionery::orderBy("created_at", 'desc')
-                ->paginate(10);
-        }
-
-        // Retorna os dados para o Vue com Inertia
+        // Caso não haja busca, retorna todos os dados com paginação
         return Inertia::render('Confectionery/Confectioneries', [
-            'confectioneries' => $confectioneries,
-            'query' => $query, // Passa a query para que o campo de busca possa ser preenchido corretamente no frontend
-        ]);
+            'confectioneries' =>  Confectionery::orderBy("created_at", 'desc')
+                                                ->paginate(10),
+            'query' => $query
+        ]);        
     }
 
 
@@ -61,11 +59,11 @@ class ConfectioneryController extends Controller
             $confectionery = Confectionery::findOrFail($id);
             $products = Product::where("id_confectionery", $id)->get();
 
-
             return Inertia::render("Confectionery/Confectionery", [
                 "confectionery" => $confectionery,
                 "products" => $products
-            ]);
+            ]); 
+            
         } catch (ModelNotFoundException $e) {
 
             return redirect('/');

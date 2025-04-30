@@ -9,6 +9,7 @@ import Header from '@/Components/Header.vue';
 import { ref, onMounted, watch } from 'vue';
 import {  useCepAddress } from '@/Scripts/autoCompleteAddress';
 import { registerConfectionery } from '@/Scripts/Confectionery/registerConfectionery';
+import { phone, cep } from "@/Scripts/formatFields";
 import "../../../css/Forms.css";
 import "../../../css/Confectionery.css";
 
@@ -60,6 +61,15 @@ watch(() => form.cep, async (newCep) => {
     await fetchAddressFromCep(newCep);
 });
 
+
+const formatPhone = (telefone) => {
+    form.phone = phone(telefone)
+}
+
+const formatCEP = (cepField) => {
+    form.cep = cep(cepField);
+}
+
 // Evento que salvo registro
 const register = () => {
 
@@ -103,7 +113,7 @@ const register = () => {
                     <div>
                         <InputLabel for="phone" value="Telefone:" />
                         <TextInput id="phone" type="text" v-model="form.phone" required autofocus autocomplete="phone"
-                            maxlength="11" />
+                            maxlength="11" @input="formatPhone(form.phone)"/>
                         <InputError :message="form.errors.phone" />
                     </div>
                     <!-- Fim - Telefone -->
@@ -139,7 +149,7 @@ const register = () => {
                     <!-- CEP -->
                     <div>
                         <InputLabel for="cep" value="CEP:" />
-                        <TextInput id="cep" type="text" v-model="form.cep" required autocomplete="cep" maxlength="8" />
+                        <TextInput id="cep" type="text" v-model="form.cep" @input="formatCEP(form.cep)" required autocomplete="cep" maxlength="8" />
                         <InputError :message="form.errors.cep" />
                     </div>
                     <!-- Fim - CEP -->

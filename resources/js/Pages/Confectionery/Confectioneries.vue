@@ -5,7 +5,7 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { router, Link } from '@inertiajs/vue3'
 import { useMenuDropdown } from "@/Scripts/useMenuDropdown";
 import { deleteConfectionery } from '@/Scripts/Confectionery/deleteConfectionery';
-import { phone } from '@/Scripts/formatFields';
+import { cep, phone } from '@/Scripts/formatFields';
 import "../../../css/Confectionery.css";
 import "../../../css/Forms.css";
 
@@ -125,7 +125,7 @@ document.title = "Marketplace";
 			<!-- Informações básicas -->
 			<div>
 				<p><strong>Telefone:</strong> {{ phone(confectionery.phone) }}</p>
-				<p><strong>CEP:</strong> {{ confectionery.cep }}</p>
+				<p><strong>CEP:</strong> {{ cep(confectionery.cep) }}</p>
 				<p><strong>Cidade:</strong> {{ confectionery.city }}</p>
 				<p><strong>Estado:</strong> {{ confectionery.state }}</p>
 			</div>
