@@ -26,6 +26,7 @@ async function fetchImageAsFile(url, filename) {
     return new File([blob], filename, { type: blob.type });
 }
 
+
 // Title da página
 onMounted(() => {
     document.title = props.product.product;
@@ -34,7 +35,7 @@ onMounted(() => {
 // Formulário
 const form = useForm({
     product: props.product.product || '',
-    price: price(String(props.product.price)) || '',
+    price: price(props.product.price) || '',
     description: props.product.description || '',
     images: []
 });
@@ -70,7 +71,8 @@ const submit = () => {
 
 // Formata o preço do produto
 const formatPrice = (priceField) => {
-    form.price = price(priceField);
+    const formattedPrice = price(priceField);
+    form.price = formattedPrice;
 }
 
 // Validação e renderização das imagens
@@ -113,7 +115,12 @@ function removeImage(index) {
                     <InputLabel for="price" value="Valor:" />
                     <div style="padding: 0;">
                         <span style="position: absolute; font-size: 18px;">R$</span>
-                        <TextInput style="padding-left: 20px;" id="price" type="text" v-model="form.price" @input="formatPrice(form.price)" required autofocus autocomplete="price" />
+                        <TextInput style="padding-left: 20px;" id="price" type="text" v-model="form.price"
+                            @input="formatPrice(form.price)"
+                            required
+                            autofocus
+                            autocomplete="price"
+                            />
                     </div>
                     <InputError :message="form.errors.price" />
                 </div>

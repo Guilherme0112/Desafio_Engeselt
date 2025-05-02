@@ -54,7 +54,9 @@ const fetchMore = () => {
 }
 // Deleta confeitaria
 function deleteItem(id) {
-	deleteConfectionery(id);
+	deleteConfectionery(id).then(() => {
+		allConfectioneries.value = allConfectioneries.value.filter(item => item.id !== id);
+	});
 }
 
 // Ouvinte do scroll para chamar mais dados quando o usuário chegar no final da página
